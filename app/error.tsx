@@ -1,10 +1,12 @@
 "use client";
-import { Activity, RotateCcw } from "lucide-react";
+import { BrandMark } from "@/components/brand-mark";
+import { brand } from "@/lib/brand";
+import { RotateCcw } from "lucide-react";
 export default function Error({ reset }: { reset: () => void }) {
   return (
     <div className="fatal-error">
-      <Activity size={35} />
-      <span className="eyebrow">PULSE · RECUPERAR WORKSPACE</span>
+      <BrandMark className="error-brand-artwork" />
+      <span className="eyebrow">{brand.wordmark} · RECUPERAR WORKSPACE</span>
       <h1>Não foi possível carregar este espaço.</h1>
       <p>
         Confira a conexão com o banco e tente novamente. Seus registros

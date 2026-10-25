@@ -1,4 +1,4 @@
-# PULSE — Personal Performance OS
+# MD Nation — Personal Performance OS
 
 Sua operação. Seus alunos. Sua evolução.
 
@@ -30,6 +30,8 @@ npm run dev
 ```
 
 `docker compose up -d db` também inicia um banco novo. As credenciais de `compose.yaml` são exclusivamente para desenvolvimento local. O banco só é exposto no loopback.
+
+A identidade pública usa a marca **MD Nation** e a logo original fornecida pelo responsável, armazenada em `public/brand/logo.jpg`. Nome e textos da marca ficam centralizados em `lib/brand.ts`. Os identificadores internos de sessão, banco e variáveis `PULSE_*` permanecem compatíveis com as instalações existentes.
 
 ## Configuração
 

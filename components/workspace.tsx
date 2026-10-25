@@ -1,6 +1,8 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { BrandMark } from "./brand-mark";
+import { brand } from "@/lib/brand";
 import { useRouter } from "next/navigation";
 import { motion, useReducedMotion } from "motion/react";
 import {
@@ -117,13 +119,9 @@ const monthLabel = (date = new Date()) =>
 function Logo() {
   return (
     <div className="brand">
-      <div className="brand-mark">
-        <Activity size={28} strokeWidth={2.8} />
-      </div>
-      <div>
-        <strong>
-          PULSE<span>®</span>
-        </strong>
+      <BrandMark />
+      <div className="brand-wordmark">
+        <strong>{brand.wordmark}</strong>
         <small>PERSONAL PERFORMANCE OS</small>
       </div>
     </div>
@@ -360,7 +358,7 @@ export default function Workspace({
     );
     const a = document.createElement("a");
     a.href = url;
-    a.download = `pulse-${name}.csv`;
+    a.download = `${brand.exportPrefix}-${name}.csv`;
     a.click();
     URL.revokeObjectURL(url);
     notify("Arquivo CSV exportado.");
@@ -620,7 +618,11 @@ export default function Workspace({
         />
       )}
       <aside className="sidebar">
-        <Link href="/" className="brand-link" aria-label="PULSE início">
+        <Link
+          href="/"
+          className="brand-link"
+          aria-label={`${brand.name} início`}
+        >
           <Logo />
         </Link>
         <div className="workspace-label">
@@ -654,7 +656,11 @@ export default function Workspace({
               <Zap size={16} />
             </div>
             <div>
-              <b>{user?.demo ? "PULSE DEMO" : "PULSE WORKSPACE"}</b>
+              <b>
+                {user?.demo
+                  ? `${brand.wordmark} DEMO`
+                  : `${brand.wordmark} WORKSPACE`}
+              </b>
               <small>
                 {user?.demo
                   ? "Explore seu próximo nível"
@@ -1007,7 +1013,7 @@ export default function Workspace({
                       </b>
                       <small>Um aluno. Um treino. Um resultado.</small>
                     </div>
-                    <div className="hero-index">PULSE / 001</div>
+                    <div className="hero-index">{brand.wordmark} / 001</div>
                   </section>
                   <div className="section-caption">
                     <span>SEU NEGÓCIO EM NÚMEROS</span>
@@ -2489,8 +2495,8 @@ export default function Workspace({
           )}
           <footer className="app-footer">
             <span>
-              <Activity size={12} />
-              PULSE <i /> Personal Performance OS
+              <BrandMark className="footer-brand-artwork" />
+              {brand.name} <i /> {brand.descriptor}
             </span>
             <span>
               Sua operação. Seus alunos. Sua evolução.
@@ -2805,10 +2811,8 @@ function Login({
         <small>FEITO PARA QUEM TRANSFORMA VIDAS.</small>
       </div>
       <div className="login-form">
-        <div className="login-mark">
-          <Activity size={28} />
-        </div>
-        <span className="eyebrow">BEM-VINDO AO PULSE</span>
+        <BrandMark className="login-brand-artwork" />
+        <span className="eyebrow">BEM-VINDO À {brand.wordmark}</span>
         <h2>Seu centro de performance.</h2>
         <p>Entre para continuar de onde parou.</p>
         <form
