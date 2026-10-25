@@ -11,7 +11,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: `${brand.name} · ${brand.descriptor}`,
   description: "Sua operação. Seus alunos. Sua evolução.",
-  icons: { icon: "/brand/logo.jpg", apple: "/brand/logo.jpg" },
+  icons: { icon: "data:," },
 };
 export default function RootLayout({
   children,

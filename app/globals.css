@@ -3294,74 +3294,79 @@ tbody tr:hover {
   max-width: 600px;
 }
 
-/* Original brand artwork, framed for each responsive logo placement. */
-.brand-artwork {
-  display: inline-block;
-  position: relative;
-  width: 42px;
-  height: 42px;
-  flex-shrink: 0;
-  overflow: hidden;
-  border-radius: 6px;
-  background: #111;
-  vertical-align: middle;
-}
-.brand-artwork-image {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transform: scale(1.55);
-  transform-origin: 50% 54%;
-}
-.brand-artwork.login-brand-artwork {
-  width: 88px;
-  height: 88px;
-  margin-bottom: 25px;
-  border: 1px solid #323436;
-  border-radius: 10px;
-}
-.brand-artwork.footer-brand-artwork {
-  width: 19px;
-  height: 19px;
-  border-radius: 3px;
-}
-.brand-artwork.error-brand-artwork {
-  width: 76px;
-  height: 76px;
-  border-radius: 10px;
-}
+/* Text-only brand identity, including compact and mobile navigation. */
 .brand-link {
-  padding-left: 3px;
-  padding-right: 3px;
+  padding-left: 10px;
+  padding-right: 4px;
 }
 .brand > .brand-wordmark strong {
   display: block;
-  font-size: clamp(18px, 1.65vw, 25px);
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 25px;
   letter-spacing: 0.1px;
-  white-space: normal;
-  overflow-wrap: anywhere;
-  max-width: 140px;
+  line-height: 1.2;
+  white-space: nowrap;
 }
-.brand > .brand-wordmark small {
-  font-size: 5.6px;
-  letter-spacing: 0.85px;
+.brand-wordmark strong span {
+  font: inherit;
+  vertical-align: baseline;
+  margin: 0;
+}
+.login-brand-name {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 34px;
+  font-weight: 600;
+  letter-spacing: -0.7px;
+  margin-bottom: 28px;
+}
+.collapsed .sidebar .brand > .brand-wordmark {
+  display: block;
+}
+.collapsed .sidebar .brand > .brand-wordmark strong {
+  font-size: 16px;
+  text-align: center;
+  white-space: normal;
+}
+.collapsed .sidebar .brand-wordmark strong span {
+  display: block;
+}
+.collapsed .sidebar .brand-wordmark strong span:last-child {
+  font-size: 9px;
+  letter-spacing: 0.35px;
 }
 @media (max-width: 1000px) and (min-width: 701px) {
-  .sidebar .brand-artwork {
-    width: 36px;
-    height: 36px;
-  }
-}
-.collapsed .sidebar .brand-artwork {
-  width: 36px;
-  height: 36px;
-}
-@media (max-width: 700px) {
-  .sidebar .brand > .brand-artwork {
-    display: inline-block;
-  }
   .sidebar .brand > .brand-wordmark {
     display: block;
+  }
+  .sidebar .brand > .brand-wordmark strong {
+    font-size: 16px;
+    text-align: center;
+    white-space: normal;
+  }
+  .sidebar .brand-wordmark strong span {
+    display: block;
+  }
+  .sidebar .brand-wordmark strong span:last-child {
+    font-size: 9px;
+    letter-spacing: 0.35px;
+  }
+}
+@media (max-width: 700px) {
+  .sidebar .brand > .brand-wordmark {
+    display: block;
+  }
+  .sidebar .brand > .brand-wordmark strong {
+    font-size: 25px;
+    text-align: left;
+    white-space: nowrap;
+  }
+  .sidebar .brand-wordmark strong span {
+    display: inline;
+    font-size: inherit;
+    letter-spacing: inherit;
+  }
+  .sidebar .brand-wordmark strong span:last-child {
+    font-size: inherit;
+    letter-spacing: inherit;
   }
 }

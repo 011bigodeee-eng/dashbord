@@ -1,11 +1,9 @@
 "use client";
-import { BrandMark } from "@/components/brand-mark";
 import { brand } from "@/lib/brand";
 import { RotateCcw } from "lucide-react";
 export default function Error({ reset }: { reset: () => void }) {
   return (
     <div className="fatal-error">
-      <BrandMark className="error-brand-artwork" />
       <span className="eyebrow">{brand.wordmark} · RECUPERAR WORKSPACE</span>
       <h1>Não foi possível carregar este espaço.</h1>
       <p>

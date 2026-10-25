@@ -1,7 +1,6 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { BrandMark } from "./brand-mark";
 import { brand } from "@/lib/brand";
 import { useRouter } from "next/navigation";
 import { motion, useReducedMotion } from "motion/react";
@@ -119,10 +118,10 @@ const monthLabel = (date = new Date()) =>
 function Logo() {
   return (
     <div className="brand">
-      <BrandMark />
       <div className="brand-wordmark">
-        <strong>{brand.wordmark}</strong>
-        <small>PERSONAL PERFORMANCE OS</small>
+        <strong>
+          <span>MD</span> <span>NATION</span>
+        </strong>
       </div>
     </div>
   );
@@ -2495,7 +2494,6 @@ export default function Workspace({
           )}
           <footer className="app-footer">
             <span>
-              <BrandMark className="footer-brand-artwork" />
               {brand.name} <i /> {brand.descriptor}
             </span>
             <span>
@@ -2811,8 +2809,8 @@ function Login({
         <small>FEITO PARA QUEM TRANSFORMA VIDAS.</small>
       </div>
       <div className="login-form">
-        <BrandMark className="login-brand-artwork" />
-        <span className="eyebrow">BEM-VINDO À {brand.wordmark}</span>
+        <div className="login-brand-name">{brand.wordmark}</div>
+        <span className="eyebrow">BEM-VINDO AO SEU WORKSPACE</span>
         <h2>Seu centro de performance.</h2>
         <p>Entre para continuar de onde parou.</p>
         <form
