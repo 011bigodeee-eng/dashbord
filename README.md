@@ -2,7 +2,7 @@
 
 ## Modo temporário sem Supabase — ativo por padrão
 
-O site agora abre **sem banco de dados, sem senha, sem `DATABASE_URL` e sem `AUTH_SECRET`**. A página inicial abre diretamente no **Studio**, sem tela de login. `/login` também redireciona para o painel. Use **Visualizar como aluno** no menu para explorar o Athlete. Essa seleção abre somente uma demonstração pública, não uma conta real.
+O site agora abre **sem banco de dados, sem senha, sem `DATABASE_URL` e sem `AUTH_SECRET`**. A página inicial abre diretamente no **Studio**, sem tela de login. `/login` também redireciona para o painel. Use **Visualizar como aluno** no menu para explorar o Athlete. No portal do aluno, **Voltar ao professor** fica disponível em todas as telas, numa barra que permanece visível ao rolar. O retorno limpa somente a seleção de perfil fictício, preservando os dados locais. Essa seleção abre somente uma demonstração pública, não uma conta real.
 
 - Os dois ambientes usam dados **fictícios**, gerados no navegador.
 - Cadastros, treinos, pagamentos, avaliações, mensagens e solicitações da demonstração são salvos em `localStorage` e sobrevivem a recarregamentos nesse navegador.

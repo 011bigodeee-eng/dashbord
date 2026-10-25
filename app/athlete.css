@@ -1984,3 +1984,55 @@
 .athlete-hero > div.hero-athlete-index {
   position: absolute;
 }
+/* Keep the temporary role switch available on every Athlete screen. */
+.athlete-mode-bar {
+  position: sticky;
+  top: 0;
+  z-index: 34;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 40px;
+  border-bottom: 1px solid #3e362a;
+  background: #181b19;
+  box-shadow: 0 5px 18px #0003;
+}
+.athlete-mode-bar > span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  color: #9aaaac;
+}
+.athlete-mode-bar > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 8px 12px;
+  color: #ffad7b;
+  border: 1px solid #6c4630;
+  background: #302219;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.athlete-mode-bar > a:hover {
+  background: #432c1f;
+  color: #ffd0b3;
+}
+@media (max-width: 600px) {
+  .athlete-mode-bar {
+    padding: 9px 18px;
+    gap: 10px;
+  }
+  .athlete-mode-bar > span {
+    font-size: 10px;
+  }
+  .athlete-mode-bar > a {
+    font-size: 11px;
+    padding: 8px 10px;
+  }
+}

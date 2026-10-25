@@ -134,7 +134,8 @@ try {
   await page.getByRole("dialog").waitFor({ state: "hidden" });
   await page.goto(base + "/athlete/perfil");
   await page
-    .getByRole("button", { name: "Visualizar como personal", exact: true })
+    .getByRole("navigation", { name: "Trocar ambiente" })
+    .getByRole("link", { name: "Voltar ao professor", exact: true })
     .click();
   await page.waitForURL(base + "/");
   await page.goto(base + "/portal");
@@ -151,6 +152,46 @@ try {
   await page.getByText("Aprovado", { exact: true }).waitFor();
   console.log(
     "PASS Studio/Athlete synchronization in the same browser and local reschedule approval",
+  );
+  for (const width of [1440, 390]) {
+    for (const route of [
+      "inicio",
+      "treinos",
+      "evolucao",
+      "agenda",
+      "perfil",
+      "executar",
+    ]) {
+      const choice = await context.request.post(base + "/api/auth", {
+        data: { demo: true, demoRole: "student" },
+      });
+      assert.equal(choice.status(), 200);
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(
+        base + (route === "inicio" ? "/athlete" : `/athlete/${route}`),
+      );
+      const back = page
+        .getByRole("navigation", { name: "Trocar ambiente" })
+        .getByRole("link", { name: "Voltar ao professor", exact: true });
+      await back.waitFor();
+      await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+      const rect = await back.boundingBox();
+      assert.ok(rect && rect.y >= 0 && rect.y + rect.height <= 900);
+      await back.click();
+      await page.waitForURL(base + "/");
+      await page
+        .getByRole("heading", { name: "Evolução do negócio" })
+        .waitFor();
+      const auth = await context.request.get(base + "/api/auth");
+      assert.equal((await auth.json()).user.role, "TRAINER");
+      assert.equal(
+        (await page.locator(".kpi-value").first().innerText()).trim(),
+        "49",
+      );
+    }
+  }
+  console.log(
+    "PASS return to teacher from all six Athlete screens on desktop/mobile, sticky control and preserved local data",
   );
   assert.deepEqual(connectedRequests, []);
   assert.deepEqual(errors, []);

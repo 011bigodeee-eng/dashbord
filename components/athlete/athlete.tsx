@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import {
   Activity,
   ArrowRight,
+  ArrowLeft,
   ArrowUpRight,
   Bell,
   CalendarDays,
@@ -329,6 +330,18 @@ export default function Athlete({ page }: { page: string }) {
             </Link>
           </div>
         </header>
+        {standalone && (
+          <nav className="athlete-mode-bar" aria-label="Trocar ambiente">
+            <span>
+              <UserRound size={15} />
+              Modo aluno
+            </span>
+            <a href="/studio">
+              <ArrowLeft size={16} />
+              Voltar ao professor
+            </a>
+          </nav>
+        )}
         <main className="athlete-content">
           <StandaloneNotice />
           {!online && (
@@ -1228,7 +1241,7 @@ export default function Athlete({ page }: { page: string }) {
                           : "Este espaço mostra somente seus treinos, agenda e dados compartilhados. Não há suporte offline completo; registros exigem conexão e confirmação do servidor."}
                       </p>
                     </section>
-                    {data.user.demo && (
+                    {!standalone && data.user.demo && (
                       <Button
                         variant="outline"
                         onClick={async () => {
@@ -1248,16 +1261,18 @@ export default function Athlete({ page }: { page: string }) {
                         <ArrowUpRight size={16} />
                       </Button>
                     )}
-                    <Button
-                      variant="outline"
-                      onClick={async () => {
-                        await appFetch("/api/auth", { method: "DELETE" });
-                        window.location.assign(standalone ? "/" : "/login");
-                      }}
-                    >
-                      <LogOut size={16} />
-                      {standalone ? "Voltar ao Studio" : "Sair da conta"}
-                    </Button>
+                    {!standalone && (
+                      <Button
+                        variant="outline"
+                        onClick={async () => {
+                          await appFetch("/api/auth", { method: "DELETE" });
+                          window.location.assign("/login");
+                        }}
+                      >
+                        <LogOut size={16} />
+                        Sair da conta
+                      </Button>
+                    )}
                   </>
                 )}
               </>
