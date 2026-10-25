@@ -1,0 +1,54 @@
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  name         String
+  passwordHash String
+  demo         Boolean       @default(false)
+  createdAt    DateTime      @default(now())
+  records      Record[]
+  files        PrivateFile[]
+
+  @@map("users")
+}
+
+// Every business record belongs to an authenticated trainer. Typed payloads
+// are validated by the server using the discriminated schemas in lib/schemas.ts.
+model Record {
+  id        String   @id @default(cuid())
+  trainerId String
+  trainer   User     @relation(fields: [trainerId], references: [id], onDelete: Cascade)
+  kind      String
+  data      Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([trainerId, kind, createdAt])
+  @@map("records")
+}
+
+model PrivateFile {
+  id        String   @id @default(cuid())
+  trainerId String
+  trainer   User     @relation(fields: [trainerId], references: [id], onDelete: Cascade)
+  studentId String
+  type      String
+  name      String
+  mime      String
+  date      String
+  consent   Boolean  @default(false)
+  bytes     Bytes
+  createdAt DateTime @default(now())
+
+  @@index([trainerId, studentId])
+  @@map("private_files")
+}
