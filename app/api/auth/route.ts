@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { compare } from "bcryptjs";
 import { db } from "@/lib/db";
+import { ensureDemoAthlete } from "@/lib/portal";
 import { checkOrigin, session, signIn } from "@/lib/auth";
 const attempts = new Map<string, { count: number; until: number }>();
 export async function GET() {
@@ -14,12 +15,16 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     if (body.demo === true && process.env.DEMO_MODE === "true") {
-      const demo = await db.user.findUnique({
-        where: { email: "demo@pulse.local" },
-      });
+      const demo =
+        body.demoRole === "student"
+          ? await ensureDemoAthlete()
+          : await db.user.findUnique({ where: { email: "demo@pulse.local" } });
       if (demo?.demo) {
         await signIn(demo.id);
-        return NextResponse.json({ ok: true });
+        return NextResponse.json({
+          ok: true,
+          redirect: demo.role === "STUDENT" ? "/athlete" : "/",
+        });
       }
     }
     const email = String(body.email ?? "")
@@ -46,9 +51,37 @@ export async function POST(req: Request) {
         { status: 401 },
       );
     }
+    if (user.role === "ADMIN" && process.env.ADMIN_ACCESS_ENABLED !== "true")
+      return NextResponse.json(
+        { error: "Acesso indisponível." },
+        { status: 403 },
+      );
+    if (user.role === "STUDENT") {
+      const access = await db.studentAccess.findUnique({
+        where: { userId: user.id },
+        include: { student: true, trainer: { select: { demo: true } } },
+      });
+      if (
+        !access?.active ||
+        (access.trainer.demo && process.env.DEMO_MODE !== "true") ||
+        (access.student.data as { status: string }).status !== "Ativo"
+      )
+        return NextResponse.json(
+          { error: "Acesso desativado. Fale com seu personal." },
+          { status: 403 },
+        );
+    }
+    if (user.demo && process.env.DEMO_MODE !== "true")
+      return NextResponse.json(
+        { error: "Demonstração indisponível." },
+        { status: 403 },
+      );
     attempts.delete(key);
     await signIn(user.id);
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({
+      ok: true,
+      redirect: user.role === "STUDENT" ? "/athlete" : "/",
+    });
   } catch {
     return NextResponse.json(
       { error: "Não foi possível entrar." },

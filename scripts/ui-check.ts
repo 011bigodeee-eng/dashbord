@@ -107,7 +107,7 @@ try {
     false,
   );
   await page.getByRole("button", { name: "Abrir menu" }).click();
-  await page.locator("nav").getByRole("link", { name: "Alunos" }).click();
+  await page.locator('nav a[href="/alunos"]').click();
   await page.waitForURL(base + "/alunos");
   console.log("PASS mobile menu and no page overflow");
   assert.deepEqual(errors, []);

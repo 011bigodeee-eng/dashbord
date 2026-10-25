@@ -13,7 +13,7 @@ bash scripts/setup-local.sh
 npm run dev
 ```
 
-Abra a porta 3000 e escolha **Acessar demonstração**. O script preserva um `.env` existente, gera um segredo de sessão aleatório para novas instalações, instala o lockfile, prepara o banco e executa o seed somente quando `DEMO_MODE=true`. O seed é idempotente: não apaga alterações da demonstração.
+Abra a porta 3000 e escolha **Visualizar como personal** ou **Visualizar como aluno**. O script preserva um `.env` existente, gera um segredo de sessão aleatório para novas instalações, instala o lockfile, prepara o banco e executa o seed somente quando `DEMO_MODE=true`. O seed é idempotente: não apaga alterações da demonstração.
 
 Alternativa manual:
 
@@ -87,7 +87,7 @@ Arquivos privados são limitados a 5 MB e validados por assinatura de formato. O
 Com o aplicativo iniciado:
 
 ```bash
-npm test                   # 4 testes de métricas e validação
+npm test                   # 5 testes de métricas, validação e duração
 npm run test:integration    # CRUD, autorização, conflito concorrente e arquivos privados
 npm run test:ui             # Login, cadastro, treinos, pagamento, rotas e mobile
 npm run test:browser        # Capturas desktop/mobile e verificação de overflow
@@ -127,8 +127,7 @@ Execute `npm run db:migrate` em um terminal seguro conectado ao banco de destino
 e crie seu profissional com `npm run user:create`, conforme as instruções acima.
 Para publicar uma demonstração, use um banco separado, habilite as duas variáveis
 de demonstração e execute o seed contra esse banco. Alterações de variáveis exigem
-um novo deploy. As migrações e o seed não são executados automaticamente pelo
-build da Vercel.
+um novo deploy. O build da Vercel aplica as migrações SQL antes de compilar; o seed não é executado automaticamente.
 
 Um 404 padrão da plataforma, sem invocações de função, indica que se deve conferir
 o framework, a raiz e a saída do deploy. Falhas de conexão com banco ou de login
@@ -140,4 +139,85 @@ A tarefa já usa checkout isolado em `/workspace/dashbord`; não é necessário 
 
 ## Próximas etapas de produto
 
-A versão cobre os fluxos centrais, mas não representa todo o escopo comercial final. Permanecem a normalização completa do domínio, recuperação de senha/MFA, notificações externas, relatórios avançados de retenção por coorte, evolução de cargas em gráfico dedicado, metas personalizadas e biblioteca de exercícios editável. Recursos de saúde não substituem avaliação profissional. Integrações bancárias, e-mail e storage externo exigem escolha de provedor e credenciais próprias.
+A versão cobre os fluxos centrais, mas não representa todo o escopo comercial final. Permanecem a normalização completa do domínio, recuperação de senha/MFA, notificações push e automações externas, relatórios avançados de retenção por coorte, metas personalizadas e biblioteca de exercícios editável. Recursos de saúde não substituem avaliação profissional. Integrações bancárias e storage externo exigem escolha de provedor e credenciais próprias. O envio opcional de convites por e-mail usa Resend e exige configuração descrita abaixo.
+
+## Studio + Athlete: dois ambientes, um banco
+
+A identidade pública continua **MD Nation**, somente em texto. O painel do profissional é o **Studio** (`/`); o portal mobile do aluno é o **Athlete** (`/athlete`). Não são dois projetos separados.
+
+### Atualizar uma instalação existente
+
+Faça backup do banco de destino e aplique **antes do novo deploy**:
+
+```bash
+npm ci
+npx prisma generate
+npm run db:migrate
+```
+
+A migração `202610250003_athlete` adiciona papéis e tabelas do portal sem apagar os registros existentes. Contas antigas recebem `TRAINER`. Execute com a `DATABASE_URL` do banco correto em um terminal seguro. O `vercel.json` agora usa `npm run deploy:build`: primeiro aplica as migrações, depois compila o Next.js. A nova versão só deve ser promovida quando ambos terminarem com sucesso. Configure `DATABASE_URL` para o banco de destino e use bancos separados para Production e Preview. Sem conexão válida, o build falha em vez de publicar uma aplicação incompatível com o schema antigo. O banco deste ambiente não é o banco Supabase de produção. O comando `npm run build` isolado continua sem aplicar migrações.
+
+Para o modo demonstrativo, rode `npm run db:seed` com `DEMO_MODE=true`. O seed prepara um profissional e o aluno fictício Rafael Martins, preservando os dados existentes. A página de login oferece **Visualizar como personal** e **Visualizar como aluno**; há também troca autorizada entre os ambientes de demonstração. Esses atalhos só funcionam com `DEMO_MODE=true` no servidor, e contas demonstrativas são bloqueadas com o modo desabilitado. Não cadastre dados reais nas contas compartilhadas.
+
+### Convidar um aluno real
+
+1. Entre na conta privada do personal e cadastre um aluno ativo.
+2. Abra **Portal dos Alunos → Acessos → Convidar por e-mail**.
+3. Informe o e-mail do aluno e gere o convite. O link é individual, válido por 72 horas e utilizável uma única vez. Renovar revoga convites anteriores ainda não utilizados.
+4. Sem serviço de e-mail configurado, copie o link e compartilhe-o por um canal privado. A interface informa explicitamente que nenhum e-mail foi enviado.
+5. O aluno abre `/convite/<token>`, confirma a própria senha (mínimo de 12 caracteres) e entra no Athlete. O personal não define nem recebe a senha do aluno.
+6. Ative/desative acessos na mesma tela. Desativar o acesso ou arquivar o cadastro impede imediatamente novas requisições, inclusive de sessões que já estavam abertas. Reativar o acesso exige também que o aluno esteja ativo.
+
+Tokens de convite são armazenados apenas como SHA-256. O link completo é uma credencial temporária: não publique em logs, capturas, canais públicos ou no Git. O sistema não vincula um convite a um e-mail já utilizado por outra conta.
+
+### Envio opcional por e-mail
+
+Configure no servidor/Vercel:
+
+| Variável         | Finalidade                                                     |
+| ---------------- | -------------------------------------------------------------- |
+| `RESEND_API_KEY` | Chave privada do Resend, nunca `NEXT_PUBLIC_*`.                |
+| `EMAIL_FROM`     | Remetente autorizado em um domínio verificado no Resend.       |
+| `APP_URL`        | URL HTTPS pública do aplicativo, usada nos links dos convites. |
+
+Não são necessárias chaves da API do Supabase para esses fluxos: o aplicativo usa PostgreSQL via Prisma. A ação de gerar convite solicita o envio ao Resend somente quando as três configurações existem e a conta do profissional não é demonstrativa. Contas demo nunca enviam e-mails reais. A interface distingue **link para compartilhar**, **aceito pelo provedor** e **falha no envio**. Aceitação pelo provedor não confirma entrega ao destinatário. Sem credenciais, o compartilhamento manual continua funcional. O envio real por Resend não foi validado neste ambiente sem credenciais do provedor.
+
+### Fluxos integrados
+
+- **Prescrição:** atribua/edite fichas na tela existente ou em Portal dos Alunos → Fichas e avaliações. O Athlete exibe apenas fichas do próprio aluno, sem controles para editar a prescrição. Cada execução mantém um snapshot da versão utilizada.
+- **Execução:** cargas, repetições e séries realizadas são gravadas no servidor; a sessão pode ser pausada e retomada após recarregar a página. Cronômetro de descanso é local; duração da sessão é calculada no servidor, descontando pausas. Há estado de salvamento, erro e tentativa manual de salvar. Finalizar exige ao menos uma série concluída e admite execução parcial, identificada no histórico. A conclusão é transacional e idempotente: um único check-in atualiza os indicadores do personal.
+- **Avaliações:** são privadas por padrão. O personal escolhe campos publicados por avaliação; desmarcar todos oculta a avaliação. Data é mostrada quando há publicação. Observações privadas, financeiro e anotações internas nunca são incluídos na API do aluno.
+- **Evolução:** gráficos de medidas autorizadas, frequência e maior carga efetivamente utilizada por sessão, com seleção de período. Não há resultados físicos inventados ou diagnóstico automático. Fotos são mostradas somente quando vinculadas ao próprio aluno e com consentimento registrado. O aluno não pode baixar fotos de outra pessoa nem documentos privados do personal.
+- **Agenda:** o aluno solicita data/horário e acompanha o status. A sessão original não muda até a aprovação do personal. Aprovação verifica conflitos dentro de transação; recusa mantém a agenda e registra a resposta.
+- **Comunicação:** o personal publica orientações, avisos e lembretes. O aluno marca mensagens como lidas, acessa o WhatsApp explicitamente quando o telefone foi compartilhado e envia feedback/esforço percebido dos treinos. Não há WhatsApp ou mensagens automáticas simuladas.
+- **Sincronização:** dados e atividades são consultados a cada 30 segundos quando a página está visível, além da atualização após cada ação. Não é anunciado tempo real via WebSocket. O dashboard exibe atividade do Athlete e acesso rápido às solicitações.
+
+### Papéis e isolamento
+
+`UserRole` contém `TRAINER`, `STUDENT` e `ADMIN`. `StudentAccess` vincula uma conta de aluno a um cadastro e ao profissional responsável. `/api/athlete` é exclusivo de alunos; APIs administrativas exigem profissional. Autorização acontece no servidor, tanto na leitura quanto em cada alteração. O papel vem do banco, não de parâmetros ou filtros do navegador. Um convite nunca cria um profissional.
+
+`ADMIN` fica desabilitado por padrão. `ADMIN_ACCESS_ENABLED=true` permite autenticar uma conta administrativa provisionada fora do aplicativo, mas não libera acesso automático a dados de outros profissionais: a administração geral e o faturamento SaaS continuam como evolução futura. Não existe endpoint público para alterar papéis. Cada profissional continua isolado por `trainerId`; não há assinatura comercial SaaS ou integração bancária nova nesta versão.
+
+As novas entidades relacionais são `StudentAccess`, `PortalInvitation`, `WorkoutSession`, `AssessmentShare`, `PortalMessage` e `RescheduleRequest`. O domínio administrativo existente mantém o armazenamento JSONB validado. A arquitetura permite múltiplos profissionais, mas cada conta de aluno pertence a um único vínculo nesta versão.
+
+### Instalação mobile e conectividade
+
+O Athlete inclui manifest, ícones tipográficos com o nome MD Nation e service worker de rede, sem cache de respostas privadas. Em navegadores compatíveis pode ser adicionado à tela inicial; o botão só aparece quando o navegador disponibiliza a instalação. No iOS, use o menu Compartilhar → Adicionar à Tela de Início.
+
+**Não há suporte offline completo nem sincronização em segundo plano.** A execução e os registros exigem internet. O portal mostra aviso ao perder conexão; dados ainda não confirmados precisam de nova tentativa de salvamento. Retomar uma sessão recupera o último progresso confirmado no servidor. Não há push notifications ou e-mails de lembrete automáticos.
+
+### Testar a expansão
+
+Com PostgreSQL migrado e o servidor iniciado, em banco de desenvolvimento:
+
+```bash
+npm run test:portal       # Convites, papéis, privacidade, execução e reagendamentos
+npm run test:portal:ui    # Fluxo mobile do aluno integrado à aprovação/feedback no Studio
+npm run test:integration # Regressão dos fluxos administrativos
+npm run test:ui
+npm test
+npm run typecheck
+npm run build
+```
+
+Os testes criam contas isoladas e removem os próprios registros no final. O teste de interface grava capturas em `/tmp/md-athlete-home-mobile.png`, `/tmp/md-athlete-workout-mobile.png` e `/tmp/md-studio-portal.png`. A demo é separada dessas contas de teste. Não execute builds enquanto `next dev` estiver ativo no mesmo checkout.

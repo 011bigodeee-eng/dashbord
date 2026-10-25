@@ -1,0 +1,1986 @@
+.athlete-shell {
+  background: #080a0b;
+  min-height: 100dvh;
+  font-size: 14px;
+}
+.athlete-sidebar {
+  width: 232px;
+  position: fixed;
+  inset: 0 auto 0 0;
+  border-right: 1px solid #252b30;
+  background: #0c1012;
+  padding: 38px 22px;
+  display: flex;
+  flex-direction: column;
+}
+.athlete-wordmark {
+  display: inline-flex;
+  flex-direction: column;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 25px;
+  font-weight: 600;
+  letter-spacing: -0.7px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.athlete-wordmark > span {
+  font-family: Inter, sans-serif;
+  letter-spacing: 5px;
+  font-size: 8px;
+  color: #f47735;
+  margin-top: 7px;
+}
+.athlete-sidebar > p {
+  font-size: 7px;
+  letter-spacing: 2px;
+  color: #53636f;
+  margin-top: 26px;
+}
+.athlete-sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 36px;
+}
+.athlete-sidebar nav a {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 15px 13px;
+  color: #8c9ca6;
+  font-size: 12px;
+  border-radius: 5px;
+}
+.athlete-sidebar nav a > svg:last-child {
+  margin-left: auto;
+  color: #35434d;
+}
+.athlete-sidebar nav a.active {
+  color: #ff9b63;
+  background: #2c1c14;
+}
+.athlete-sidebar-bottom {
+  margin-top: auto;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  border-top: 1px solid #273038;
+  padding-top: 24px;
+  color: #8a9caa;
+}
+.athlete-sidebar-bottom > svg {
+  color: #e68c56;
+}
+.athlete-sidebar-bottom > span {
+  font-size: 7px;
+  letter-spacing: 0.7px;
+}
+.athlete-sidebar-bottom small {
+  display: block;
+  letter-spacing: 0;
+  font-size: 9px;
+  margin-top: 7px;
+  color: #506571;
+}
+.athlete-main {
+  margin-left: 232px;
+  min-width: 0;
+}
+.athlete-header {
+  height: 80px;
+  border-bottom: 1px solid #202a31;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 20px;
+  padding: 0 42px;
+  background: #0b0f11;
+}
+.athlete-header > .athlete-wordmark {
+  display: none;
+}
+.athlete-header > div {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.athlete-bell {
+  position: relative;
+  color: #95a3ac;
+}
+.athlete-bell > i {
+  font-size: 7px;
+  font-style: normal;
+  position: absolute;
+  right: -6px;
+  top: -6px;
+  width: 15px;
+  height: 15px;
+  background: #f47735;
+  border-radius: 50%;
+  color: #14100b;
+  display: grid;
+  place-items: center;
+}
+.athlete-avatar {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #4b4035;
+  border-radius: 50%;
+  background: #2e271f;
+  font-size: 10px;
+  font-weight: 600;
+  color: #d9c9b8;
+}
+.athlete-avatar.large {
+  width: 72px;
+  height: 72px;
+  font-size: 24px;
+}
+.athlete-demo-tag {
+  font-size: 8px;
+  letter-spacing: 1.2px;
+  color: #bf8c66;
+  border: 1px solid #443022;
+  background: #241b14;
+  padding: 5px 8px;
+  border-radius: 3px;
+}
+.athlete-content {
+  padding: 32px 40px 0;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.athlete-section-heading {
+  margin-bottom: 25px;
+}
+.athlete-section-heading .eyebrow {
+  font-size: 8px;
+  letter-spacing: 1.9px;
+  margin-bottom: 10px;
+  display: block;
+}
+.athlete-section-heading h1 {
+  font-family: "Space Grotesk";
+  font-size: 35px;
+  letter-spacing: -1.3px;
+}
+.athlete-section-heading p {
+  font-size: 12px;
+  color: #8a9ba6;
+  margin-top: 8px;
+}
+.athlete-hero {
+  position: relative;
+  overflow: hidden;
+  min-height: 255px;
+  border: 1px solid #38372e;
+  border-radius: 9px;
+  padding: 32px;
+  margin-bottom: 20px;
+}
+.athlete-hero-image {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, #121817f5, #121817b0 48%, #12181722),
+    url("/gym-hero.webp") 65% center/cover;
+}
+.athlete-hero > div:not(.athlete-hero-image) {
+  position: relative;
+}
+.athlete-hero h2 {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 53px;
+  line-height: 1;
+  font-weight: 700;
+  margin: 17px 0 12px;
+  letter-spacing: 0.6px;
+}
+.athlete-hero h2 em {
+  font-style: normal;
+  color: #ff9459;
+}
+.athlete-hero .eyebrow {
+  font-size: 7px;
+  color: #b2b7aa;
+  letter-spacing: 1.5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.athlete-hero p {
+  font-size: 10px;
+  color: #a0a99f;
+  margin: 15px 0;
+}
+.athlete-hero .button {
+  font-size: 11px;
+  padding: 11px 15px;
+}
+.athlete-hero .hero-athlete-index {
+  position: absolute;
+  right: 23px;
+  bottom: 24px;
+  color: #b7b4a5;
+  font-size: 8px;
+  letter-spacing: 2px;
+}
+.athlete-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 13px;
+  margin: 20px 0;
+}
+.athlete-summary-grid > div {
+  border: 1px solid #29343b;
+  background: #11171b;
+  border-radius: 7px;
+  padding: 19px 20px;
+  position: relative;
+}
+.athlete-summary-grid > div > svg {
+  position: absolute;
+  right: 17px;
+  top: 20px;
+  color: #7e8e98;
+}
+.athlete-summary-grid b {
+  display: block;
+  font-family: "Space Grotesk";
+  font-size: 31px;
+  font-weight: 500;
+  letter-spacing: -1px;
+  margin-bottom: 7px;
+}
+.athlete-summary-grid b small {
+  font-family: Inter;
+  font-size: 10px;
+  color: #718592;
+  letter-spacing: 0;
+  margin-left: 7px;
+  font-weight: 400;
+}
+.athlete-summary-grid span,
+.athlete-summary-grid > div > small {
+  font-size: 10px;
+  color: #8b9eab;
+  display: block;
+}
+.athlete-two-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+.athlete-panel {
+  background: #11171b;
+  border: 1px solid #27323a;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 20px;
+  min-width: 0;
+}
+.athlete-panel h2 {
+  font-family: "Space Grotesk";
+  font-size: 25px;
+  letter-spacing: -0.7px;
+}
+.athlete-panel-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.athlete-panel-title h3 {
+  font-size: 13px;
+}
+.athlete-panel-title > svg {
+  color: #718793;
+}
+.athlete-panel-title > a,
+.athlete-panel-title > span {
+  font-size: 9px;
+  color: #8297a4;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.athlete-panel-title select {
+  font-size: 10px;
+  max-width: 170px;
+  padding: 8px;
+}
+.athlete-chip {
+  display: inline-flex;
+  font-size: 8px !important;
+  letter-spacing: 0.5px;
+  border: 1px solid #403024;
+  background: #2a2018;
+  color: #d69b70 !important;
+  padding: 5px 7px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+.today-workout {
+  background: linear-gradient(125deg, #211e16, #11171b 70%);
+  border-color: #3d3526;
+}
+.today-workout .athlete-panel-title .athlete-chip {
+  font-size: 6px !important;
+}
+.today-workout-title {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: 22px 0 16px;
+}
+.workout-division {
+  font-family: "Space Grotesk";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 52px;
+  max-width: 90px;
+  height: 54px;
+  background: #33251a;
+  border: 1px solid #60422a;
+  color: #f1a465;
+  border-radius: 5px;
+  font-size: 19px;
+  padding: 8px;
+}
+.today-workout-title h2 {
+  font-size: 21px;
+  line-height: 1.25;
+}
+.today-workout-title p,
+.training-tile > p {
+  font-size: 10px;
+  color: #8697a2;
+  margin-top: 8px;
+}
+.coach-note {
+  font-size: 11px;
+  color: #9faea9;
+  line-height: 1.8;
+  margin: 14px 0;
+  white-space: pre-wrap;
+}
+.today-workout > .button {
+  display: flex;
+  width: 100%;
+  margin-top: 24px;
+  min-height: 45px;
+}
+.today-workout > .button > svg:last-child {
+  margin-left: auto;
+}
+.weekly-bars {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  height: 157px;
+  padding-top: 10px;
+}
+.weekly-bars > div {
+  flex: 1;
+  text-align: center;
+  min-width: 0;
+}
+.weekly-bars > div > b {
+  font-size: 9px;
+  color: #617784;
+  font-family: "Space Grotesk";
+  font-weight: 400;
+}
+.weekly-bars > div > div {
+  position: relative;
+  height: 100px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  margin: 9px auto 12px;
+  background: #19232a;
+  border-radius: 4px;
+  overflow: hidden;
+  max-width: 25px;
+}
+.weekly-bars > div > div > span {
+  display: block;
+  width: 100%;
+  background: #dc8653;
+  border-radius: 4px;
+}
+.weekly-bars > div.today > div > span {
+  background: #ff9b63;
+}
+.weekly-bars small {
+  font-size: 8px;
+  color: #718a99;
+  text-transform: uppercase;
+}
+.weekly-bars > div.today small {
+  color: #e49b6b;
+}
+.athlete-panel-foot {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 21px;
+  padding-top: 15px;
+  border-top: 1px solid #2a353d;
+  font-size: 9px;
+  line-height: 1.6;
+  color: #8ba094;
+}
+.athlete-panel-foot > svg {
+  color: #e39b64;
+}
+.athlete-next-session {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+}
+.athlete-calendar-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #3a464c;
+  background: #1c262c;
+  border-radius: 6px;
+  height: 63px;
+  width: 58px;
+  flex-shrink: 0;
+}
+.athlete-calendar-icon b {
+  font-family: "Space Grotesk";
+  font-size: 24px;
+  font-weight: 500;
+}
+.athlete-calendar-icon small {
+  font-size: 8px;
+  color: #7e939e;
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+.athlete-next-session > div:nth-child(2) {
+  flex: 1;
+  min-width: 0;
+}
+.athlete-next-session h3 {
+  font-size: 14px;
+}
+.athlete-next-session p {
+  font-size: 11px;
+  color: #a3b0b7;
+  margin: 7px 0;
+}
+.athlete-next-session > div > small {
+  font-size: 9px;
+  color: #6c8592;
+}
+.athlete-guidance b {
+  font-size: 13px;
+}
+.athlete-guidance p {
+  font-size: 12px;
+  line-height: 1.9;
+  color: #a5b6bf;
+  white-space: pre-wrap;
+  margin: 13px 0 17px;
+}
+.athlete-guidance small {
+  font-size: 9px;
+  color: #728b99;
+}
+.athlete-footer {
+  padding: 25px 0 34px;
+  color: #667d89;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 9px;
+  border-top: 1px solid #202e36;
+  margin-top: 32px;
+}
+.athlete-footer span {
+  font-size: 6px;
+  letter-spacing: 1px;
+  color: #425a68;
+}
+.athlete-bottom-nav {
+  display: none;
+}
+.athlete-offline,
+.athlete-error {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #342a18;
+  border: 1px solid #71552c;
+  padding: 15px;
+  font-size: 11px;
+  line-height: 1.8;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+.athlete-error {
+  background: #352022;
+  border-color: #674044;
+  color: #efadab;
+}
+.athlete-skeleton {
+  display: grid;
+  gap: 20px;
+}
+.athlete-skeleton .skeleton:first-child {
+  height: 250px;
+}
+.athlete-empty {
+  padding: 30px 15px;
+  min-height: 145px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  color: #7f95a2;
+}
+.athlete-empty > svg {
+  color: #b27950;
+}
+.athlete-empty h3 {
+  font-size: 13px;
+}
+.athlete-empty p {
+  font-size: 11px;
+  line-height: 1.8;
+  max-width: 390px;
+  color: #6c8492;
+}
+.athlete-resume {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #292218;
+  border: 1px solid #62452a;
+  border-radius: 7px;
+  padding: 18px;
+  margin-bottom: 22px;
+  color: #efaf7b;
+}
+.athlete-resume > div {
+  flex: 1;
+}
+.athlete-resume b {
+  display: block;
+  font-size: 13px;
+}
+.athlete-resume small {
+  display: block;
+  font-size: 10px;
+  color: #ad9276;
+  margin-top: 7px;
+}
+.athlete-training-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+.training-tile-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.training-tile-top > svg {
+  margin-left: auto;
+  color: #5c707c;
+}
+.training-tile h2 {
+  font-size: 23px;
+  line-height: 1.4;
+}
+.training-tile details {
+  border-top: 1px solid #28363f;
+  border-bottom: 1px solid #28363f;
+  margin: 20px 0;
+}
+.training-tile summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #8da3b1;
+  padding: 14px 0;
+  cursor: pointer;
+}
+.training-tile > .button {
+  width: 100%;
+  min-height: 44px;
+}
+.training-updated {
+  display: block;
+  text-align: center;
+  font-size: 8px;
+  line-height: 1.8;
+  color: #596f7d;
+  margin-top: 12px;
+}
+.athlete-exercise-list > div {
+  display: flex;
+  gap: 13px;
+  margin: 15px 0 20px;
+  font-size: 11px;
+}
+.athlete-exercise-list > div > span {
+  color: #7d634e;
+  font-family: "Space Grotesk";
+}
+.athlete-exercise-list small {
+  display: block;
+  color: #8ca2af;
+  font-size: 10px;
+  line-height: 1.6;
+  margin-top: 6px;
+}
+.athlete-history-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 0;
+  border-top: 1px solid #26333c;
+}
+.history-check {
+  width: 30px;
+  height: 30px;
+  background: #163028;
+  border: 1px solid #284d3e;
+  color: #6bc6a0;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}
+.athlete-history-row > div {
+  flex: 1;
+}
+.athlete-history-row b {
+  font-size: 12px;
+}
+.athlete-history-row small {
+  display: block;
+  color: #7f96a4;
+  font-size: 9px;
+  line-height: 1.7;
+  margin-top: 6px;
+}
+.athlete-periods {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  overflow: auto;
+}
+.athlete-periods button {
+  padding: 10px 14px;
+  white-space: nowrap;
+  border: 1px solid #2a3943;
+  border-radius: 5px;
+  color: #839ba9;
+  font-size: 11px;
+}
+.athlete-periods button.active {
+  border-color: #6d452c;
+  color: #eea573;
+  background: #2d2118;
+}
+.athlete-chart-note {
+  display: block;
+  font-size: 9px;
+  line-height: 1.8;
+  color: #738c9a;
+  margin-top: 15px;
+}
+.athlete-assessment-row {
+  display: flex;
+  gap: 15px;
+  padding: 18px 0;
+  border-top: 1px solid #293841;
+}
+.athlete-assessment-row b {
+  font-size: 12px;
+}
+.athlete-assessment-row > div > div {
+  display: flex;
+  gap: 10px 20px;
+  flex-wrap: wrap;
+  margin: 13px 0;
+}
+.athlete-assessment-row > div > div > span {
+  font-size: 10px;
+  color: #7993a3;
+}
+.athlete-assessment-row > div > div strong {
+  color: #b7c9d3;
+  font-weight: 500;
+}
+.athlete-assessment-row small {
+  font-size: 10px;
+  color: #9caa8c;
+}
+.athlete-agenda-action {
+  padding: 20px 0 0;
+}
+.athlete-agenda-action p {
+  font-size: 11px;
+}
+.athlete-profile {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  padding: 30px;
+}
+.athlete-profile h2 {
+  margin-top: 20px;
+}
+.athlete-profile > p {
+  font-size: 12px;
+  color: #a0b3bf;
+  margin: 10px 0;
+}
+.athlete-profile > small {
+  font-size: 11px;
+  color: #647e8e;
+}
+.athlete-profile .athlete-demo-note {
+  font-size: 10px;
+  line-height: 1.7;
+  color: #b69b7f;
+  margin-top: 20px;
+}
+.athlete-message {
+  padding: 20px 0;
+  border-top: 1px solid #2c3c46;
+}
+.athlete-message > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+.athlete-message small {
+  font-size: 9px;
+  color: #698798;
+}
+.athlete-message.unread .eyebrow {
+  color: #f1a572;
+}
+.athlete-message h3 {
+  font-size: 14px;
+  margin: 10px 0;
+}
+.athlete-message p {
+  font-size: 12px;
+  line-height: 1.9;
+  white-space: pre-wrap;
+  color: #a0b7c5;
+  margin-bottom: 15px;
+}
+.athlete-privacy {
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+  color: #839baa;
+}
+.athlete-privacy svg {
+  color: #7db6a0;
+  flex-shrink: 0;
+}
+.athlete-privacy p {
+  font-size: 10px;
+  line-height: 1.9;
+}
+.athlete-content > .button {
+  margin-right: 10px;
+}
+.athlete-panel label {
+  margin: 16px 0;
+}
+.athlete-panel textarea {
+  font-size: 13px;
+  line-height: 1.8;
+}
+.athlete-content input[type="range"] {
+  accent-color: var(--primary);
+}
+/* Focused workout execution */
+.workout-runner,
+.workout-complete {
+  max-width: 740px;
+  margin: 0 auto;
+}
+.runner-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.runner-top > div {
+  flex: 1;
+}
+.runner-top small {
+  font-size: 7px;
+  letter-spacing: 1.3px;
+  color: #718e9e;
+}
+.runner-top h2 {
+  font-size: 17px;
+  font-family: "Space Grotesk";
+  margin-top: 7px;
+}
+.runner-clock {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: "Space Grotesk";
+  font-size: 17px;
+  color: #b9c7cd;
+}
+.runner-progress {
+  margin: 26px 0;
+}
+.runner-progress > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #7f9ba9;
+  margin-bottom: 12px;
+}
+.runner-progress b {
+  color: #f4a16e;
+}
+.athlete-progress-track {
+  height: 5px;
+  background: #24333c;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.athlete-progress-track > span {
+  display: block;
+  height: 100%;
+  background: #f47735;
+  border-radius: 4px;
+  transition: width 0.25s;
+}
+.runner-prescription {
+  border: 1px solid #34404a;
+  border-radius: 9px;
+  background: #11191e;
+  padding: 24px;
+}
+.exercise-counter {
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  color: #e1a273;
+}
+.exercise-glyph {
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  color: #536d7c;
+  background: radial-gradient(ellipse at center, #25333b, #11191e 70%);
+}
+.exercise-glyph > span {
+  font-size: 7px;
+  letter-spacing: 2px;
+  max-width: 95px;
+  line-height: 2;
+}
+.runner-prescription h1 {
+  font-size: 28px;
+  font-family: "Space Grotesk";
+  line-height: 1.25;
+  margin: 8px 0 22px;
+}
+.exercise-prescription {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+.exercise-prescription > span {
+  font-size: 9px;
+  color: #7792a2;
+}
+.exercise-prescription b {
+  font-family: "Space Grotesk";
+  font-size: 19px;
+  color: #d4e0e6;
+  display: block;
+  margin-bottom: 7px;
+}
+.coach-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: #c1926d;
+  margin-top: 22px;
+  border-top: 1px solid #293c46;
+  padding-top: 17px;
+}
+.coach-tip p {
+  font-size: 11px;
+  line-height: 1.8;
+  color: #a1b4c0;
+}
+.runner-set-table {
+  margin: 24px 0;
+}
+.runner-set-table > div {
+  display: grid;
+  grid-template-columns: 50px minmax(0, 1fr) minmax(0, 1fr) 52px;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 14px;
+  border-bottom: 1px solid #24333e;
+}
+.runner-set-table > .set-table-header {
+  color: #668493;
+  font-size: 8px;
+  letter-spacing: 0.5px;
+  text-align: center;
+  border-bottom: 1px solid #3a454d;
+  padding-bottom: 17px;
+}
+.runner-set-table > div > b {
+  font-family: "Space Grotesk";
+  font-size: 16px;
+  text-align: center;
+  color: #8098a8;
+}
+.runner-set-table input {
+  font-family: "Space Grotesk";
+  font-size: 19px;
+  text-align: center;
+  min-width: 0;
+  width: 100%;
+  padding: 12px 5px;
+  background: #131e25;
+  border-color: #2a414f;
+  color: #d5e6ef;
+}
+.set-check {
+  width: 48px;
+  height: 48px;
+  border: 1px solid #3e4d58;
+  border-radius: 7px;
+  background: #1d2a33;
+  color: #627b8b;
+  display: grid;
+  place-items: center;
+}
+.set-done {
+  background: #14251e;
+}
+.set-done .set-check {
+  background: #267a55;
+  border-color: #40aa7e;
+  color: #fff;
+}
+.rest-timer {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #211e18;
+  border: 1px solid #5b4430;
+  border-radius: 7px;
+  padding: 18px;
+}
+.rest-timer > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  color: #e5a67a;
+}
+.rest-timer > div > span {
+  font-size: 7px;
+  letter-spacing: 1px;
+}
+.rest-timer small {
+  display: block;
+  color: #9e8f7c;
+  font-size: 9px;
+  letter-spacing: 0;
+  margin-top: 7px;
+}
+.rest-timer > b {
+  font-family: "Space Grotesk";
+  font-size: 26px;
+  color: #edba8f;
+  font-weight: 500;
+}
+.runner-exercise-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 24px 0;
+}
+.runner-exercise-nav > span {
+  font-size: 10px;
+  color: #718d9e;
+}
+.runner-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+}
+.runner-actions .button {
+  flex: 1;
+  min-height: 48px;
+  font-size: 12px;
+}
+.runner-save-status {
+  font-size: 10px;
+  color: #79958a;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  line-height: 1.8;
+}
+.finish-confirm {
+  margin-top: 25px;
+}
+.finish-confirm > p {
+  font-size: 11px;
+  line-height: 1.8;
+  color: #92a7b5;
+  margin: 12px 0;
+}
+.workout-complete {
+  text-align: center;
+  padding: 22px 0;
+}
+.complete-medal {
+  width: 95px;
+  height: 95px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 28px;
+  border: 1px solid #73502d;
+  background: radial-gradient(circle, #49331d, #241c15);
+  color: #f3b76c;
+  border-radius: 50%;
+}
+.workout-complete h1 {
+  font-family: "Barlow Condensed";
+  font-size: 62px;
+  line-height: 1.02;
+  margin: 15px 0;
+}
+.workout-complete h1 em {
+  color: #f4a56b;
+  font-style: normal;
+}
+.workout-complete > p {
+  font-size: 13px;
+  color: #829dad;
+  margin: 20px 0 30px;
+}
+.workout-complete .athlete-summary-grid > div > svg {
+  position: static;
+  color: #c79468;
+  margin: 0 auto 10px;
+}
+.workout-complete .athlete-panel {
+  text-align: left;
+}
+.workout-complete > .eyebrow {
+  color: #d9af7b;
+  letter-spacing: 2px;
+}
+.workout-complete .athlete-summary-grid b {
+  font-size: 25px;
+}
+.workout-complete > .button {
+  min-height: 48px;
+}
+.invite-page {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at 30% 10%, #262018, #080a0b 60%);
+  padding: 40px 20px;
+}
+.invite-card {
+  width: 450px;
+  max-width: 100%;
+  border: 1px solid #2d3b45;
+  background: #10171b;
+  border-radius: 10px;
+  padding: 35px;
+}
+.invite-card > .athlete-wordmark {
+  font-size: 24px;
+}
+.invite-symbol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border: 1px solid #4c402e;
+  background: #292218;
+  color: #efb877;
+  margin: 35px 0 25px;
+  border-radius: 8px;
+}
+.invite-card h1 {
+  font-size: 28px;
+  margin: 12px 0 16px;
+  line-height: 1.3;
+}
+.invite-card > p {
+  font-size: 12px;
+  line-height: 1.9;
+  color: #93a8b6;
+}
+.invite-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 28px 0;
+}
+.invite-card input {
+  padding: 13px;
+  font-size: 14px;
+}
+.invite-card form > p {
+  font-size: 10px;
+  line-height: 1.8;
+}
+.invite-card .button {
+  min-height: 46px;
+}
+.athlete-demo-button {
+  margin-top: 10px;
+}
+/* Integrated Studio portal */
+.studio-overview {
+  margin-bottom: 20px;
+}
+.portal-overview-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding: 22px 20px;
+  gap: 20px;
+}
+.portal-overview-metrics > div {
+  position: relative;
+  border-right: 1px solid #2c373f;
+}
+.portal-overview-metrics > div:last-child {
+  border: 0;
+}
+.portal-overview-metrics svg {
+  color: #a87c56;
+  position: absolute;
+  right: 18px;
+  top: 2px;
+}
+.portal-overview-metrics b {
+  font-family: "Space Grotesk";
+  font-size: 25px;
+  display: block;
+  margin-bottom: 9px;
+}
+.portal-overview-metrics span {
+  font-size: 9px;
+  color: #7f99a8;
+}
+.portal-live-feed {
+  border-top: 1px solid #26343e;
+  padding: 0 20px;
+}
+.portal-live-feed > div {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 0;
+  color: #7f9baa;
+  border-bottom: 1px solid #21323e;
+  font-size: 9px;
+}
+.portal-live-feed b {
+  color: #b2c5d1;
+}
+.portal-live-feed small {
+  margin-left: auto;
+  font-size: 8px;
+  white-space: nowrap;
+}
+.portal-intro {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 25px;
+  background: linear-gradient(120deg, #252117, #12191d);
+  border: 1px solid #4b3b28;
+  border-radius: 7px;
+  margin-bottom: 25px;
+}
+.portal-symbol {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  color: #e4b17a;
+  border: 1px solid #6a4d2b;
+  background: #33261a;
+  border-radius: 7px;
+  flex-shrink: 0;
+}
+.portal-intro h2 {
+  font-family: "Space Grotesk";
+  font-size: 21px;
+  letter-spacing: -0.5px;
+}
+.portal-intro p {
+  font-size: 11px;
+  line-height: 1.8;
+  color: #94a6b3;
+  margin-top: 8px;
+}
+.portal-sync {
+  font-size: 8px;
+  color: #91a495;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+.tab-count {
+  margin-left: 7px;
+  font-size: 9px;
+  background: #63401f;
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: #ffc78b;
+}
+.portal-training-row {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 20px;
+  border-bottom: 1px solid #28353f;
+}
+.portal-training-row > svg {
+  color: #bb9467;
+}
+.portal-training-row > div {
+  flex: 1;
+}
+.portal-training-row b {
+  font-size: 11px;
+}
+.portal-training-row small {
+  display: block;
+  color: #7a94a5;
+  font-size: 9px;
+  margin-top: 7px;
+}
+.publish-assessment {
+  padding: 20px;
+  border-top: 1px solid #2d3d48;
+  margin-top: 15px;
+}
+.publish-assessment h3 {
+  font-size: 12px;
+}
+.publish-assessment > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 18px 0;
+}
+.publish-assessment label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 10px;
+  gap: 8px;
+  color: #95adbd;
+}
+.publish-assessment input {
+  accent-color: #f47735;
+}
+.publish-assessment > small {
+  font-size: 8px;
+  line-height: 1.8;
+  color: #6d899a;
+  display: block;
+  margin-top: 10px;
+}
+.portal-message,
+.request-decision {
+  padding: 20px;
+  border-top: 1px solid #2b3a46;
+  margin-top: 15px;
+}
+.portal-message > div,
+.request-decision > div:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 15px;
+  font-size: 11px;
+}
+.portal-message h3,
+.request-decision h3 {
+  font-size: 12px;
+}
+.portal-message p,
+.request-decision p {
+  font-size: 11px;
+  line-height: 1.9;
+  color: #8da8b9;
+  white-space: pre-wrap;
+  margin: 12px 0;
+}
+.portal-message small {
+  font-size: 9px;
+  color: #5d7f95;
+}
+.request-decision textarea {
+  margin-bottom: 17px;
+}
+.portal-feedback {
+  border-top: 1px solid #2b3e4b;
+  margin-top: 17px;
+}
+.portal-feedback summary {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px;
+  cursor: pointer;
+}
+.portal-feedback summary > div {
+  flex: 1;
+}
+.portal-feedback summary b {
+  font-size: 12px;
+}
+.portal-feedback summary small {
+  font-size: 10px;
+  color: #7799af;
+  display: block;
+  margin-top: 7px;
+}
+.portal-feedback-body {
+  padding: 0 20px 20px;
+}
+.portal-feedback-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+.portal-feedback-stats span {
+  border: 1px solid #3b4d59;
+  background: #1b2a33;
+  border-radius: 4px;
+  padding: 7px;
+  font-size: 9px;
+  color: #a5c4d6;
+}
+.portal-feedback-body > p {
+  font-size: 12px;
+  line-height: 1.9;
+  color: #c0d0d9;
+  margin-bottom: 18px;
+  white-space: pre-wrap;
+}
+.invitation-result {
+  border: 1px solid #3e554b;
+  border-radius: 6px;
+  background: #14251f;
+  padding: 20px;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.invitation-result > svg {
+  color: #68bb93;
+}
+.invitation-result p {
+  font-size: 11px;
+  line-height: 1.8;
+  color: #9ec0b0;
+}
+.invitation-result input {
+  font-size: 10px;
+  width: 100%;
+}
+.studio-demo-switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  border: 1px solid #403d2b;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  padding: 10px;
+  color: #cba77e;
+  font-size: 9px;
+  white-space: nowrap;
+}
+.studio-demo-switch > svg:last-child {
+  margin-left: auto;
+}
+.collapsed .studio-demo-switch span,
+.collapsed .studio-demo-switch > svg:last-child {
+  display: none;
+}
+@media (max-width: 1200px) {
+  .athlete-sidebar {
+    width: 200px;
+    padding: 35px 18px;
+  }
+  .athlete-main {
+    margin-left: 200px;
+  }
+  .athlete-wordmark {
+    font-size: 23px;
+  }
+  .athlete-content {
+    padding: 28px 25px 0;
+  }
+  .athlete-header {
+    padding: 0 28px;
+  }
+  .athlete-panel {
+    padding: 20px;
+  }
+  .portal-sync {
+    display: none;
+  }
+  .today-workout-title h2 {
+    font-size: 18px;
+  }
+  .today-workout .athlete-panel-title {
+    flex-wrap: wrap;
+  }
+  .portal-overview-metrics span {
+    font-size: 8px;
+  }
+}
+@media (max-width: 900px) {
+  .athlete-sidebar {
+    display: none;
+  }
+  .athlete-main {
+    margin-left: 0;
+  }
+  .athlete-header {
+    justify-content: space-between;
+  }
+  .athlete-header > .athlete-wordmark {
+    display: flex;
+  }
+  .athlete-header {
+    height: 76px;
+  }
+  .athlete-header .athlete-wordmark {
+    font-size: 22px;
+  }
+  .athlete-header .athlete-wordmark span {
+    font-size: 7px;
+    letter-spacing: 3.5px;
+    margin-top: 4px;
+  }
+  .athlete-content {
+    padding-bottom: 85px;
+  }
+  .athlete-bottom-nav {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-top: 1px solid #2b3943;
+    z-index: 35;
+    background: #0e1519;
+    padding: 12px 8px calc(12px + env(safe-area-inset-bottom));
+    box-shadow: 0 -10px 30px #080a0b88;
+  }
+  .athlete-bottom-nav a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 6px;
+    color: #6f8b9c;
+    font-size: 8px;
+    position: relative;
+  }
+  .athlete-bottom-nav a.active {
+    color: #f7a06a;
+  }
+  .athlete-bottom-nav a.active:before {
+    content: "";
+    position: absolute;
+    top: -13px;
+    width: 26px;
+    height: 2px;
+    background: #f47735;
+    border-radius: 2px;
+  }
+  .athlete-footer {
+    padding-bottom: 10px;
+  }
+  .athlete-header .athlete-demo-tag {
+    font-size: 6px;
+  }
+  .portal-overview-metrics {
+    grid-template-columns: 1fr 1fr;
+    row-gap: 25px;
+  }
+  .portal-overview-metrics > div:nth-child(2) {
+    border: 0;
+  }
+  .portal-intro h2 {
+    font-size: 19px;
+  }
+}
+@media (max-width: 600px) {
+  .athlete-content {
+    padding: 25px 18px 90px;
+  }
+  .athlete-header {
+    padding: 0 20px;
+    height: 72px;
+  }
+  .athlete-header > div {
+    gap: 15px;
+  }
+  .athlete-header .athlete-wordmark {
+    font-size: 21px;
+  }
+  .athlete-header .athlete-wordmark span {
+    font-size: 6px;
+    letter-spacing: 3px;
+  }
+  .athlete-header .athlete-demo-tag {
+    position: absolute;
+    top: 6px;
+    right: 20px;
+    font-size: 5px;
+    padding: 2px 4px;
+    letter-spacing: 0.5px;
+    border: 0;
+    background: transparent;
+  }
+  .athlete-section-heading h1 {
+    font-size: 29px;
+    letter-spacing: -1px;
+  }
+  .athlete-section-heading p {
+    font-size: 10px;
+    line-height: 1.8;
+  }
+  .athlete-section-heading .eyebrow {
+    font-size: 7px;
+    letter-spacing: 1.2px;
+  }
+  .athlete-hero {
+    min-height: 280px;
+    padding: 25px 22px;
+    border-radius: 8px;
+  }
+  .athlete-hero h2 {
+    font-size: 51px;
+    margin-top: 22px;
+  }
+  .athlete-hero .eyebrow {
+    font-size: 5.5px;
+    letter-spacing: 0.9px;
+  }
+  .athlete-hero .hero-athlete-index {
+    font-size: 6px;
+    right: 15px;
+    bottom: 20px;
+  }
+  .athlete-hero p {
+    font-size: 9px;
+  }
+  .athlete-hero .button {
+    font-size: 10px;
+    padding: 11px 12px;
+  }
+  .athlete-summary-grid {
+    gap: 8px;
+    margin: 17px 0;
+  }
+  .athlete-summary-grid > div {
+    padding: 15px 10px;
+    border-radius: 6px;
+    min-width: 0;
+  }
+  .athlete-summary-grid > div > svg {
+    position: static;
+    width: 15px;
+    height: 15px;
+    margin-bottom: 10px;
+    color: #d69c70;
+  }
+  .athlete-summary-grid b {
+    font-size: 26px;
+    margin-bottom: 7px;
+  }
+  .athlete-summary-grid b small {
+    font-size: 8px;
+    display: block;
+    margin: 5px 0 0;
+    font-weight: 400;
+  }
+  .athlete-summary-grid span,
+  .athlete-summary-grid > div > small {
+    font-size: 8px;
+    line-height: 1.5;
+  }
+  .athlete-two-columns,
+  .athlete-training-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .athlete-panel {
+    padding: 20px 17px;
+    margin-bottom: 16px;
+  }
+  .athlete-panel-title {
+    margin-bottom: 20px;
+  }
+  .athlete-panel-title h3 {
+    font-size: 12px;
+  }
+  .athlete-panel-title select {
+    font-size: 9px;
+    max-width: 145px;
+  }
+  .athlete-panel-title > span {
+    font-size: 8px;
+  }
+  .today-workout-title h2 {
+    font-size: 22px;
+  }
+  .today-workout .athlete-panel-title {
+    flex-wrap: nowrap;
+  }
+  .today-workout .athlete-panel-title .athlete-chip {
+    font-size: 5px !important;
+    padding: 5px;
+  }
+  .workout-division {
+    min-width: 48px;
+    height: 51px;
+    font-size: 17px;
+  }
+  .today-workout-title {
+    gap: 13px;
+  }
+  .today-workout-title p {
+    font-size: 9px;
+  }
+  .coach-note {
+    font-size: 11px;
+  }
+  .athlete-next-session {
+    gap: 12px;
+  }
+  .athlete-next-session > .athlete-chip {
+    display: none;
+  }
+  .athlete-calendar-icon {
+    width: 48px;
+    height: 56px;
+  }
+  .athlete-calendar-icon b {
+    font-size: 23px;
+  }
+  .athlete-next-session h3 {
+    font-size: 12px;
+  }
+  .athlete-next-session p {
+    font-size: 10px;
+    line-height: 1.6;
+  }
+  .athlete-next-session > div > small {
+    font-size: 8px;
+  }
+  .athlete-footer {
+    font-size: 8px;
+  }
+  .athlete-footer span {
+    font-size: 5px;
+    letter-spacing: 0.3px;
+    max-width: 150px;
+    text-align: right;
+    line-height: 1.8;
+  }
+  .athlete-resume {
+    padding: 15px;
+    gap: 12px;
+  }
+  .athlete-resume b {
+    font-size: 11px;
+  }
+  .athlete-resume small {
+    font-size: 9px;
+  }
+  .training-tile h2 {
+    font-size: 24px;
+  }
+  .athlete-history-row {
+    gap: 10px;
+  }
+  .athlete-history-row b {
+    font-size: 11px;
+  }
+  .athlete-history-row small {
+    font-size: 8px;
+  }
+  .athlete-history-row .text-link {
+    font-size: 8px;
+  }
+  .athlete-periods button {
+    font-size: 10px;
+    padding: 9px 13px;
+  }
+  .athlete-assessment-row b {
+    font-size: 11px;
+  }
+  .athlete-assessment-row > div > div {
+    gap: 8px 14px;
+  }
+  .athlete-assessment-row > div > div > span {
+    font-size: 9px;
+  }
+  .athlete-panel .chart {
+    height: 205px;
+  }
+  .athlete-message p {
+    font-size: 11px;
+  }
+  .athlete-content label input:not([type="range"]),
+  .athlete-content label textarea {
+    font-size: 16px;
+  }
+  .runner-top h2 {
+    font-size: 15px;
+  }
+  .runner-top small {
+    font-size: 6px;
+  }
+  .runner-clock {
+    font-size: 15px;
+    gap: 5px;
+  }
+  .runner-top {
+    gap: 8px;
+  }
+  .runner-prescription {
+    padding: 19px 17px;
+  }
+  .runner-prescription h1 {
+    font-size: 27px;
+  }
+  .exercise-glyph {
+    height: 120px;
+  }
+  .exercise-glyph > span {
+    font-size: 6px;
+  }
+  .exercise-prescription {
+    gap: 8px;
+  }
+  .exercise-prescription b {
+    font-size: 16px;
+  }
+  .exercise-prescription > span {
+    font-size: 8px;
+  }
+  .runner-set-table > div {
+    grid-template-columns: 28px minmax(0, 1fr) minmax(0, 1fr) 43px;
+    gap: 8px;
+    padding: 12px 2px;
+  }
+  .runner-set-table > .set-table-header {
+    font-size: 7px;
+    letter-spacing: 0;
+  }
+  .runner-set-table input {
+    font-size: 19px;
+    padding: 11px 4px;
+  }
+  .set-check {
+    width: 41px;
+    height: 45px;
+  }
+  .runner-set-table > div > b {
+    font-size: 14px;
+  }
+  .rest-timer {
+    padding: 14px 12px;
+    gap: 9px;
+  }
+  .rest-timer > div {
+    gap: 8px;
+  }
+  .rest-timer > div > span {
+    font-size: 5.5px;
+    letter-spacing: 0.5px;
+  }
+  .rest-timer small {
+    font-size: 7px;
+  }
+  .rest-timer > b {
+    font-size: 22px;
+  }
+  .rest-timer > .icon-button {
+    width: 23px;
+  }
+  .runner-exercise-nav .button {
+    font-size: 11px;
+    padding: 10px;
+  }
+  .runner-exercise-nav > span {
+    font-size: 9px;
+  }
+  .runner-actions {
+    gap: 9px;
+  }
+  .runner-actions .button {
+    font-size: 10px;
+    padding: 12px 9px;
+    gap: 6px;
+  }
+  .runner-save-status {
+    font-size: 9px;
+  }
+  .workout-complete h1 {
+    font-size: 56px;
+  }
+  .workout-complete .athlete-summary-grid b {
+    font-size: 23px;
+  }
+  .workout-complete .athlete-summary-grid > div > small {
+    font-size: 8px;
+  }
+  .workout-complete .athlete-panel textarea {
+    font-size: 16px;
+  }
+  .invite-card {
+    padding: 28px 23px;
+  }
+  .invite-card h1 {
+    font-size: 27px;
+  }
+  .invite-card input {
+    font-size: 16px;
+  }
+  .portal-intro {
+    padding: 20px;
+    gap: 14px;
+  }
+  .portal-symbol {
+    width: 42px;
+    height: 46px;
+  }
+  .portal-intro h2 {
+    font-size: 17px;
+    line-height: 1.4;
+  }
+  .portal-intro p {
+    font-size: 10px;
+  }
+  .portal-intro .eyebrow {
+    font-size: 6px;
+    letter-spacing: 0.5px;
+  }
+  .portal-overview-metrics {
+    padding: 22px 16px;
+    gap: 22px 14px;
+  }
+  .portal-overview-metrics span {
+    font-size: 8px;
+  }
+  .portal-overview-metrics svg {
+    right: 10px;
+    width: 15px;
+  }
+  .portal-live-feed {
+    padding: 0 16px;
+  }
+  .portal-live-feed > div {
+    flex-wrap: wrap;
+    gap: 7px;
+    font-size: 8px;
+  }
+  .portal-live-feed > div > span {
+    flex-basis: 70%;
+    line-height: 1.8;
+  }
+  .portal-live-feed small {
+    font-size: 7px;
+  }
+  .portal-feedback summary {
+    padding: 17px 15px;
+    gap: 10px;
+  }
+  .portal-feedback summary b {
+    font-size: 11px;
+  }
+  .portal-feedback summary small {
+    font-size: 9px;
+  }
+  .portal-feedback-body {
+    padding: 0 15px 15px;
+  }
+  .studio-demo-switch {
+    font-size: 8px;
+  }
+  .portal-training-row {
+    padding: 17px;
+  }
+  .publish-assessment {
+    padding: 17px;
+  }
+  .request-decision,
+  .portal-message {
+    padding: 17px;
+  }
+  .invitation-result {
+    padding: 15px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .athlete-progress-track > span {
+    transition: none;
+  }
+}
+.athlete-hero > div.hero-athlete-index {
+  position: absolute;
+}

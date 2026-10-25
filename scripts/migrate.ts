@@ -2,6 +2,10 @@ import "dotenv/config";
 import { Pool } from "pg";
 import { readdir, readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
+if (!process.env.DATABASE_URL)
+  throw new Error(
+    "Configure DATABASE_URL para o banco de destino antes de aplicar migrações.",
+  );
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const client = await pool.connect();
 try {

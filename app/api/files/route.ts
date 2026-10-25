@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { session, checkOrigin } from "@/lib/auth";
+import { trainerSession, checkOrigin } from "@/lib/auth";
 export async function GET(req: Request) {
-  const user = await session();
+  const user = await trainerSession();
   if (!user)
     return NextResponse.json({ error: "Acesso negado" }, { status: 401 });
   const studentId = new URL(req.url).searchParams.get("studentId") || "";
@@ -17,7 +17,7 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   if (!checkOrigin(req))
     return NextResponse.json({ error: "Origem inválida" }, { status: 403 });
-  const user = await session();
+  const user = await trainerSession();
   if (!user)
     return NextResponse.json({ error: "Acesso negado" }, { status: 401 });
   try {

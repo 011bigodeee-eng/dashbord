@@ -9,14 +9,19 @@ datasource db {
 }
 
 model User {
-  id           String        @id @default(cuid())
-  email        String        @unique
-  name         String
-  passwordHash String
-  demo         Boolean       @default(false)
-  createdAt    DateTime      @default(now())
-  records      Record[]
-  files        PrivateFile[]
+  id              String             @id @default(cuid())
+  email           String             @unique
+  name            String
+  passwordHash    String
+  demo            Boolean            @default(false)
+  role            UserRole           @default(TRAINER)
+  athleteAccess   StudentAccess?     @relation("AthleteAccount")
+  managedAccesses StudentAccess[]    @relation("TrainerAccess")
+  invitations     PortalInvitation[]
+  messages        PortalMessage[]
+  createdAt       DateTime           @default(now())
+  records         Record[]
+  files           PrivateFile[]
 
   @@map("users")
 }
@@ -24,13 +29,15 @@ model User {
 // Every business record belongs to an authenticated trainer. Typed payloads
 // are validated by the server using the discriminated schemas in lib/schemas.ts.
 model Record {
-  id        String   @id @default(cuid())
-  trainerId String
-  trainer   User     @relation(fields: [trainerId], references: [id], onDelete: Cascade)
-  kind      String
-  data      Json
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              String           @id @default(cuid())
+  trainerId       String
+  trainer         User             @relation(fields: [trainerId], references: [id], onDelete: Cascade)
+  kind            String
+  data            Json
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  portalAccess    StudentAccess?
+  assessmentShare AssessmentShare?
 
   @@index([trainerId, kind, createdAt])
   @@map("records")
@@ -51,4 +58,104 @@ model PrivateFile {
 
   @@index([trainerId, studentId])
   @@map("private_files")
+}
+
+enum UserRole {
+  ADMIN
+  TRAINER
+  STUDENT
+}
+
+model StudentAccess {
+  id        String              @id @default(cuid())
+  userId    String              @unique
+  user      User                @relation("AthleteAccount", fields: [userId], references: [id], onDelete: Cascade)
+  trainerId String
+  trainer   User                @relation("TrainerAccess", fields: [trainerId], references: [id], onDelete: Cascade)
+  studentId String              @unique
+  student   Record              @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  active    Boolean             @default(true)
+  createdAt DateTime            @default(now())
+  sessions  WorkoutSession[]
+  requests  RescheduleRequest[]
+
+  @@index([trainerId, active])
+  @@map("student_accesses")
+}
+
+model PortalInvitation {
+  id         String    @id @default(cuid())
+  tokenHash  String    @unique
+  trainerId  String
+  trainer    User      @relation(fields: [trainerId], references: [id], onDelete: Cascade)
+  studentId  String
+  email      String
+  expiresAt  DateTime
+  acceptedAt DateTime?
+  revokedAt  DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([trainerId, studentId])
+  @@map("portal_invitations")
+}
+
+model WorkoutSession {
+  id            String        @id @default(cuid())
+  accessId      String
+  access        StudentAccess @relation(fields: [accessId], references: [id], onDelete: Cascade)
+  trainingId    String
+  snapshot      Json
+  state         Json
+  status        String        @default("IN_PROGRESS")
+  activeSeconds Int           @default(0)
+  startedAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  completedAt   DateTime?
+  feedback      String        @default("")
+  difficulty    Int?
+
+  @@index([accessId, status, startedAt])
+  @@map("workout_sessions")
+}
+
+model AssessmentShare {
+  id           String   @id @default(cuid())
+  assessmentId String   @unique
+  assessment   Record   @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  fields       String[]
+  updatedAt    DateTime @updatedAt
+
+  @@map("assessment_shares")
+}
+
+model PortalMessage {
+  id        String    @id @default(cuid())
+  trainerId String
+  trainer   User      @relation(fields: [trainerId], references: [id], onDelete: Cascade)
+  studentId String
+  title     String
+  body      String
+  category  String
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([trainerId, studentId, createdAt])
+  @@map("portal_messages")
+}
+
+model RescheduleRequest {
+  id            String        @id @default(cuid())
+  accessId      String
+  access        StudentAccess @relation(fields: [accessId], references: [id], onDelete: Cascade)
+  appointmentId String
+  date          String
+  time          String
+  reason        String
+  status        String        @default("PENDING")
+  response      String        @default("")
+  createdAt     DateTime      @default(now())
+  decidedAt     DateTime?
+
+  @@index([accessId, status])
+  @@map("reschedule_requests")
 }

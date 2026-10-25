@@ -1,4 +1,5 @@
 import "dotenv/config";
+import { ensureDemoAthlete } from "../lib/portal";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { hash } from "bcryptjs";
@@ -78,7 +79,10 @@ async function main() {
     where: { email: "demo@pulse.local" },
   });
   if (existing) {
-    console.log("Demonstração já existe; dados preservados.");
+    await ensureDemoAthlete(db);
+    console.log(
+      "Demonstração já existe; dados preservados. Portal Athlete preparado.",
+    );
     return;
   }
   const user = await db.user.create({
@@ -243,4 +247,6 @@ async function main() {
     "Demonstração criada: 48 alunos fictícios. Acesse com o botão de demonstração quando DEMO_MODE=true.",
   );
 }
-main().finally(() => db.$disconnect());
+main()
+  .then(() => ensureDemoAthlete(db))
+  .finally(() => db.$disconnect());

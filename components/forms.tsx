@@ -273,6 +273,7 @@ export function RecordForm({
                         <div className="exercise-fields">
                           {[
                             ["name", "Exercício"],
+                            ["muscleGroup", "Grupo muscular"],
                             ["sets", "Séries"],
                             ["reps", "Repetições"],
                             ["load", "Carga (kg)"],
@@ -289,7 +290,7 @@ export function RecordForm({
                                     ? "number"
                                     : "text"
                                 }
-                                value={ex[key]}
+                                value={ex[key] ?? ""}
                                 onChange={(e) =>
                                   field.onChange(
                                     field.value.map((v: any, n: number) =>

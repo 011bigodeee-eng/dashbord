@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { checkOrigin, session } from "@/lib/auth";
+import { checkOrigin, trainerSession } from "@/lib/auth";
 import { schemas, Kind } from "@/lib/schemas";
 export async function GET() {
-  const user = await session();
+  const user = await trainerSession();
   if (!user)
     return NextResponse.json(
       { error: "Faça login para continuar." },
@@ -13,12 +13,15 @@ export async function GET() {
     where: { trainerId: user.id },
     orderBy: { createdAt: "asc" },
   });
-  return NextResponse.json({ user, records });
+  return NextResponse.json(
+    { user, records },
+    { headers: { "Cache-Control": "private, no-store" } },
+  );
 }
 export async function POST(req: Request) {
   if (!checkOrigin(req))
     return NextResponse.json({ error: "Origem inválida" }, { status: 403 });
-  const user = await session();
+  const user = await trainerSession();
   if (!user)
     return NextResponse.json(
       { error: "Acesso não autorizado" },

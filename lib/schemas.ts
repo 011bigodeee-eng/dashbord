@@ -29,6 +29,7 @@ export const schemas = {
       .array(
         z.object({
           name: text,
+          muscleGroup: optional,
           sets: z.coerce.number().min(1).max(30),
           reps: text,
           load: money,

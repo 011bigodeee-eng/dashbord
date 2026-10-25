@@ -16,6 +16,7 @@ const routes = [
   "relatorios",
   "configuracoes",
   "login",
+  "portal",
 ];
 export default async function Page({
   params,
@@ -32,6 +33,7 @@ export default async function Page({
     notFound();
   const user = await session();
   if (!user && page !== "login") redirect("/login");
+  if(user?.role==='STUDENT')redirect('/athlete');
   if (user && page === "login") redirect("/");
   return <Workspace page={page} studentId={path[1]} initialUser={user} />;
 }

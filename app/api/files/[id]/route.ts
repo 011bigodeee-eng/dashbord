@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { session, checkOrigin } from "@/lib/auth";
+import { session, trainerSession, checkOrigin } from "@/lib/auth";
 export async function GET(
   _: Request,
   { params }: { params: Promise<{ id: string }> },
@@ -9,7 +9,24 @@ export async function GET(
   if (!user) return new Response(null, { status: 401 });
   const { id } = await params;
   const file = await db.privateFile.findFirst({
-    where: { id, trainerId: user.id },
+    where:
+      user.role === "STUDENT"
+        ? {
+            id,
+            trainerId: (
+              await db.studentAccess.findUniqueOrThrow({
+                where: { userId: user.id },
+              })
+            ).trainerId,
+            studentId: (
+              await db.studentAccess.findUniqueOrThrow({
+                where: { userId: user.id },
+              })
+            ).studentId,
+            type: "photo",
+            consent: true,
+          }
+        : { id, trainerId: user.id },
   });
   if (!file) return new Response(null, { status: 404 });
   return new Response(new Uint8Array(file.bytes), {
@@ -27,7 +44,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> },
 ) {
   if (!checkOrigin(req)) return new Response(null, { status: 403 });
-  const user = await session();
+  const user = await trainerSession();
   if (!user) return new Response(null, { status: 401 });
   const { id } = await params;
   const result = await db.privateFile.deleteMany({

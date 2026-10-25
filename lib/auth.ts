@@ -17,9 +17,24 @@ export async function session() {
     });
     const user = await db.user.findUnique({
       where: { id: payload.sub },
-      select: { id: true, name: true, email: true, demo: true },
+      select: { id: true, name: true, email: true, demo: true, role: true },
     });
-    return user?.demo && process.env.DEMO_MODE !== "true" ? null : user;
+    if (!user || (user.demo && process.env.DEMO_MODE !== "true")) return null;
+    if (user.role === "ADMIN" && process.env.ADMIN_ACCESS_ENABLED !== "true")
+      return null;
+    if (user.role === "STUDENT") {
+      const access = await db.studentAccess.findUnique({
+        where: { userId: user.id },
+        include: { student: true, trainer: { select: { demo: true } } },
+      });
+      if (
+        !access?.active ||
+        (access.trainer.demo && process.env.DEMO_MODE !== "true") ||
+        (access.student.data as { status: string }).status !== "Ativo"
+      )
+        return null;
+    }
+    return user;
   } catch {
     return null;
   }
@@ -53,4 +68,13 @@ export function checkOrigin(req: Request) {
   } catch {
     return false;
   }
+}
+
+export async function trainerSession() {
+  const user = await session();
+  return user &&
+    (user.role === "TRAINER" ||
+      (user.role === "ADMIN" && process.env.ADMIN_ACCESS_ENABLED === "true"))
+    ? user
+    : null;
 }

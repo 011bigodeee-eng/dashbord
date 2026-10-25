@@ -53,6 +53,7 @@ import { Button } from "./ui/button";
 import { Dialog } from "./ui/dialog";
 import { RecordForm, titles } from "./forms";
 import { PrivateFiles } from "./private-files";
+import StudioPortal from "./studio-portal";
 import { GrowthChart, Distribution, RevenueChart } from "./charts";
 import { Entry, Kind, currency, dateLabel } from "@/lib/schemas";
 import { metrics, today } from "@/lib/metrics";
@@ -60,6 +61,7 @@ type User = { id: string; name: string; email: string; demo: boolean };
 const nav = [
   ["dashboard", "Dashboard", LayoutDashboard],
   ["alunos", "Alunos", Users],
+  ["portal", "Portal dos Alunos", ShieldCheck],
   ["treinos", "Treinos", Dumbbell],
   ["evolucao", "Evolução física", ChartNoAxesCombined],
   ["avaliacoes", "Avaliações", ClipboardCheck],
@@ -82,6 +84,10 @@ const pageInfo: Record<string, [string, string]> = {
   dashboard: [
     "Visão geral",
     "Sua operação em movimento. Cada detalhe, sob controle.",
+  ],
+  portal: [
+    "Portal dos Alunos",
+    "Sua presença, mesmo quando o treino é à distância.",
   ],
   alunos: ["Seus alunos", "Pessoas, objetivos e histórias de evolução."],
   treinos: [
@@ -253,7 +259,7 @@ export default function Workspace({
   const notify = (s: string) => setToast(s);
   const load = useCallback(async () => {
     try {
-      const res = await fetch("/api/data");
+      const res = await fetch("/api/data", { cache: "no-store" });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       setRecords(data.records);
@@ -268,6 +274,13 @@ export default function Workspace({
   useEffect(() => {
     if (initialUser) void load();
     else setLoading(false);
+  }, [initialUser, load]);
+  useEffect(() => {
+    if (!initialUser) return;
+    const timer = setInterval(() => {
+      if (!document.hidden) void load();
+    }, 30000);
+    return () => clearInterval(timer);
   }, [initialUser, load]);
   useEffect(() => {
     if (toast) {
@@ -600,8 +613,8 @@ export default function Workspace({
     return (
       <Login
         demoEnabled={process.env.NEXT_PUBLIC_DEMO_MODE === "true"}
-        onSuccess={() => {
-          window.location.assign("/");
+        onSuccess={(destination) => {
+          window.location.assign(destination);
         }}
       />
     );
@@ -625,13 +638,13 @@ export default function Workspace({
           <Logo />
         </Link>
         <div className="workspace-label">
-          <span>WORKSPACE</span>
+          <span>MD NATION STUDIO</span>
           <span className="workspace-dot" />
         </div>
         <nav>
           {nav.map(([href, label, Icon], i) => (
             <div key={href}>
-              {i === 7 && (
+              {href === "financeiro" && (
                 <div className="nav-divider">
                   <span>GESTÃO DO NEGÓCIO</span>
                 </div>
@@ -650,6 +663,24 @@ export default function Workspace({
           ))}
         </nav>
         <div className="sidebar-bottom">
+          {user?.demo && (
+            <button
+              className="studio-demo-switch"
+              onClick={async () => {
+                const r = await fetch("/api/auth", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ demo: true, demoRole: "student" }),
+                });
+                if (r.ok) window.location.assign("/athlete");
+                else notify("Demonstração indisponível.");
+              }}
+            >
+              <Dumbbell size={14} />
+              <span>Visualizar como aluno</span>
+              <ArrowUpRight size={13} />
+            </button>
+          )}
           <div className="pro-box">
             <div className="pro-icon">
               <Zap size={16} />
@@ -1022,6 +1053,7 @@ export default function Workspace({
                     </span>
                   </div>
                   {renderKpis()}
+                  <StudioPortal records={records} overview />
                   <div className="dashboard-grid">
                     <Panel
                       title="Evolução do negócio"
@@ -1279,6 +1311,12 @@ export default function Workspace({
                     </Panel>
                   </div>
                 </>
+              )}
+              {page === "portal" && (
+                <StudioPortal
+                  records={records}
+                  onTraining={(entry, id) => open("training", entry, id)}
+                />
               )}
               {page === "alunos" && !studentId && (
                 <>
@@ -2769,24 +2807,26 @@ function Login({
   onSuccess,
 }: {
   demoEnabled: boolean;
-  onSuccess: () => void;
+  onSuccess: (destination: string) => void;
 }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
-  const login = async (demo = false) => {
+  const login = async (demo: false | "trainer" | "student" = false) => {
     setBusy(true);
     setError("");
     try {
       const res = await fetch("/api/auth", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(demo ? { demo: true } : { email, password }),
+        body: JSON.stringify(
+          demo ? { demo: true, demoRole: demo } : { email, password },
+        ),
       });
       const result = await res.json();
       if (!res.ok) throw new Error(result.error);
-      onSuccess();
+      onSuccess(result.redirect || "/");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Falha ao entrar");
     } finally {
@@ -2861,10 +2901,19 @@ function Login({
             <Button
               variant="outline"
               disabled={busy}
-              onClick={() => void login(true)}
+              onClick={() => void login("trainer")}
             >
               <Sparkles size={16} />
-              Acessar demonstração
+              Visualizar como personal
+            </Button>
+            <Button
+              variant="outline"
+              disabled={busy}
+              className="athlete-demo-button"
+              onClick={() => void login("student")}
+            >
+              <Dumbbell size={16} />
+              Visualizar como aluno
             </Button>
             <small className="demo-disclaimer">
               Demonstração compartilhada com dados fictícios.

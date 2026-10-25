@@ -82,3 +82,28 @@ test("empty account has finite zero metrics", () => {
   assert.equal(result.pendingTotal, 0);
   assert.equal(result.growth.length, 12);
 });
+
+test("frequent autosaves preserve elapsed time and exclude pauses", async () => {
+  const { workoutClock } = await import("../lib/workout-clock");
+  let run = {
+    status: "IN_PROGRESS",
+    activeSeconds: 0,
+    updatedAt: new Date(0),
+    state: { clockRemainderMs: 0 },
+  };
+  for (let now = 200; now <= 1000; now += 200) {
+    const t = workoutClock(run, now);
+    run = {
+      ...run,
+      activeSeconds: t.seconds,
+      state: { clockRemainderMs: t.remainderMs },
+      updatedAt: new Date(now),
+    };
+  }
+  assert.equal(run.activeSeconds, 1);
+  assert.equal(run.state.clockRemainderMs, 0);
+  assert.deepEqual(workoutClock({ ...run, status: "PAUSED" }, 10000), {
+    seconds: 1,
+    remainderMs: 0,
+  });
+});
