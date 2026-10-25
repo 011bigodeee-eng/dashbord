@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { isStandaloneMode } from "@/lib/runtime-mode";
+import { RuntimeProvider } from "@/components/runtime-provider";
 import { brand } from "@/lib/brand";
 import "@fontsource/inter/400.css";
 import "@fontsource/inter/500.css";
@@ -20,8 +22,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR">
-      <body>{children}</body>
+    <html
+      lang="pt-BR"
+      data-app-mode={isStandaloneMode() ? "standalone" : "database"}
+    >
+      <body>
+        <RuntimeProvider standalone={isStandaloneMode()}>
+          {children}
+        </RuntimeProvider>
+      </body>
     </html>
   );
 }

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { isStandaloneMode } from "@/lib/runtime-mode";
 import { compare } from "bcryptjs";
 import { db } from "@/lib/db";
 import { ensureDemoAthlete } from "@/lib/portal";
@@ -14,6 +15,27 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Origem inválida" }, { status: 403 });
   try {
     const body = await req.json();
+    if (isStandaloneMode()) {
+      if (body.demo !== true || !["trainer", "student"].includes(body.demoRole))
+        return NextResponse.json(
+          {
+            error:
+              "Contas reais estão pausadas. Selecione a demonstração do personal ou do aluno.",
+          },
+          { status: 503 },
+        );
+      (await cookies()).set("md-nation-preview-role", body.demoRole, {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+        path: "/",
+        maxAge: 43200,
+      });
+      return NextResponse.json({
+        ok: true,
+        redirect: body.demoRole === "student" ? "/athlete" : "/",
+      });
+    }
     if (body.demo === true && process.env.DEMO_MODE === "true") {
       const demo =
         body.demoRole === "student"
@@ -93,5 +115,6 @@ export async function DELETE(req: Request) {
   if (!checkOrigin(req))
     return NextResponse.json({ error: "Origem inválida" }, { status: 403 });
   (await cookies()).delete("pulse-session");
+  (await cookies()).delete("md-nation-preview-role");
   return NextResponse.json({ ok: true });
 }

@@ -1,7 +1,10 @@
 "use client";
+import { appFetch } from "@/lib/app-fetch";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { brand } from "@/lib/brand";
+import { StandaloneNotice, useStandaloneMode } from "./runtime-provider";
+import { resetLocalDemo } from "@/lib/local-demo-api";
 import { useRouter } from "next/navigation";
 import { motion, useReducedMotion } from "motion/react";
 import {
@@ -219,6 +222,7 @@ export default function Workspace({
   studentId?: string;
   initialUser: User | null;
 }) {
+  const standalone = useStandaloneMode();
   const router = useRouter();
   const reduced = useReducedMotion();
   const [user, setUser] = useState(initialUser);
@@ -259,7 +263,7 @@ export default function Workspace({
   const notify = (s: string) => setToast(s);
   const load = useCallback(async () => {
     try {
-      const res = await fetch("/api/data", { cache: "no-store" });
+      const res = await appFetch("/api/data", { cache: "no-store" });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       setRecords(data.records);
@@ -325,7 +329,7 @@ export default function Workspace({
     setQuick(false);
   };
   const save = async (kind: Kind, data: any, id?: string) => {
-    const res = await fetch("/api/data", {
+    const res = await appFetch("/api/data", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ kind, data, id }),
@@ -376,7 +380,7 @@ export default function Workspace({
     notify("Arquivo CSV exportado.");
   };
   const logout = async () => {
-    await fetch("/api/auth", { method: "DELETE" });
+    await appFetch("/api/auth", { method: "DELETE" });
     window.location.assign("/login");
   };
   const studentList = m.students
@@ -667,7 +671,7 @@ export default function Workspace({
             <button
               className="studio-demo-switch"
               onClick={async () => {
-                const r = await fetch("/api/auth", {
+                const r = await appFetch("/api/auth", {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({ demo: true, demoRole: "student" }),
@@ -879,6 +883,7 @@ export default function Workspace({
           </div>
         </header>
         <main>
+          <StandaloneNotice />
           <div className="page-heading">
             <div>
               <div className="eyebrow">
@@ -2483,20 +2488,30 @@ export default function Workspace({
                       <div>
                         <ShieldCheck size={20} />
                         <span>
-                          <b>Acesso autenticado</b>
+                          <b>
+                            {standalone
+                              ? "Demonstração local"
+                              : "Acesso autenticado"}
+                          </b>
                           <small>
-                            Sessão assinada, cookie HttpOnly e validação no
-                            servidor.
+                            {standalone
+                              ? "A escolha de perfil controla apenas a navegação entre telas demonstrativas."
+                              : "Sessão assinada, cookie HttpOnly e validação no servidor."}
                           </small>
                         </span>
                       </div>
                       <div>
                         <Users size={20} />
                         <span>
-                          <b>Isolamento por profissional</b>
+                          <b>
+                            {standalone
+                              ? "Dados neste navegador"
+                              : "Isolamento por profissional"}
+                          </b>
                           <small>
-                            Todos os registros são vinculados ao usuário
-                            autenticado.
+                            {standalone
+                              ? "Sem contas reais ou sincronização. Não utilize informações pessoais."
+                              : "Todos os registros são vinculados ao usuário autenticado."}
                           </small>
                         </span>
                       </div>
@@ -2510,7 +2525,9 @@ export default function Workspace({
                           </b>
                           <small>
                             {user?.demo
-                              ? "Somente dados fictícios. Não cadastre informações reais nesta conta compartilhada."
+                              ? standalone
+                                ? "Somente dados fictícios armazenados neste navegador."
+                                : "Somente dados fictícios. Não cadastre informações reais nesta conta compartilhada."
                               : "Dados privados do seu espaço de trabalho."}
                           </small>
                         </span>
@@ -2525,6 +2542,26 @@ export default function Workspace({
                         </span>
                       </div>
                     </div>
+                    {standalone && (
+                      <div className="padded">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            if (
+                              window.confirm(
+                                "Restaurar os dados fictícios deste navegador? Alterações locais da demonstração serão apagadas. Nenhum banco será alterado.",
+                              )
+                            ) {
+                              resetLocalDemo();
+                              window.location.reload();
+                            }
+                          }}
+                        >
+                          Restaurar demonstração local
+                        </Button>
+                      </div>
+                    )}
                   </Panel>
                 </div>
               )}
@@ -2809,6 +2846,7 @@ function Login({
   demoEnabled: boolean;
   onSuccess: (destination: string) => void;
 }) {
+  const standalone = useStandaloneMode();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -2817,7 +2855,7 @@ function Login({
     setBusy(true);
     setError("");
     try {
-      const res = await fetch("/api/auth", {
+      const res = await appFetch("/api/auth", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(
@@ -2852,52 +2890,66 @@ function Login({
         <div className="login-brand-name">{brand.wordmark}</div>
         <span className="eyebrow">BEM-VINDO AO SEU WORKSPACE</span>
         <h2>Seu centro de performance.</h2>
-        <p>Entre para continuar de onde parou.</p>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            void login();
-          }}
-        >
-          <label>
-            E-mail
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              autoComplete="username"
-              placeholder="voce@exemplo.com"
-            />
-          </label>
-          <label>
-            Senha
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoComplete="current-password"
-              placeholder="Sua senha"
-            />
-          </label>
-          {error && (
-            <p className="error" role="alert">
-              {error}
-            </p>
-          )}
-          <Button disabled={busy} type="submit">
-            {busy ? (
-              <Loader2 size={17} className="spin" />
-            ) : (
-              "Entrar no workspace"
+        <p>
+          {standalone
+            ? "Escolha um ambiente para explorar, sem e-mail ou senha."
+            : "Entre para continuar de onde parou."}
+        </p>
+        <StandaloneNotice />
+        {!standalone && (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              void login();
+            }}
+          >
+            <label>
+              E-mail
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="username"
+                placeholder="voce@exemplo.com"
+              />
+            </label>
+            <label>
+              Senha
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
+                placeholder="Sua senha"
+              />
+            </label>
+            {error && (
+              <p className="error" role="alert">
+                {error}
+              </p>
             )}
-            <ArrowRight size={16} />
-          </Button>
-        </form>
-        {demoEnabled && (
+            <Button disabled={busy} type="submit">
+              {busy ? (
+                <Loader2 size={17} className="spin" />
+              ) : (
+                "Entrar no workspace"
+              )}
+              <ArrowRight size={16} />
+            </Button>
+          </form>
+        )}
+        {standalone && error && (
+          <p role="alert" className="error">
+            {error}
+          </p>
+        )}
+        {(demoEnabled || standalone) && (
           <>
-            <div className="login-divider">OU EXPLORE O PRODUTO</div>
+            <div className="login-divider">
+              {standalone ? "DEMONSTRAÇÃO LOCAL" : "OU EXPLORE O PRODUTO"}
+            </div>
             <Button
               variant="outline"
               disabled={busy}
@@ -2916,7 +2968,9 @@ function Login({
               Visualizar como aluno
             </Button>
             <small className="demo-disclaimer">
-              Demonstração compartilhada com dados fictícios.
+              {standalone
+                ? "Dados fictícios salvos somente neste navegador."
+                : "Demonstração compartilhada com dados fictícios."}
               <br />
               Não utilize informações pessoais reais.
             </small>
@@ -2924,7 +2978,9 @@ function Login({
         )}
         <small className="login-security">
           <ShieldCheck size={13} />
-          Seu espaço. Seus dados. Acesso protegido.
+          {standalone
+            ? "Modo temporário · contas reais indisponíveis."
+            : "Seu espaço. Seus dados. Acesso protegido."}
         </small>
       </div>
     </div>

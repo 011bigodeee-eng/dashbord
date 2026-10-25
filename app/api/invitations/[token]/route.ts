@@ -1,3 +1,5 @@
+import { isStandaloneMode } from "@/lib/runtime-mode";
+import { servicePaused } from "@/lib/service-paused";
 import { NextResponse } from "next/server";
 import { createHash } from "node:crypto";
 import { hash } from "bcryptjs";
@@ -22,6 +24,7 @@ export async function GET(
   _: Request,
   { params }: { params: Promise<{ token: string }> },
 ) {
+  if (isStandaloneMode()) return servicePaused();
   try {
     const i = await invitation((await params).token);
     const s = await db.record.findFirst({
@@ -50,6 +53,7 @@ export async function POST(
   req: Request,
   { params }: { params: Promise<{ token: string }> },
 ) {
+  if (isStandaloneMode()) return servicePaused();
   if (!checkOrigin(req))
     return NextResponse.json({ error: "Origem inválida" }, { status: 403 });
   try {

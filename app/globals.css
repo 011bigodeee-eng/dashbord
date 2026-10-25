@@ -3370,3 +3370,57 @@ tbody tr:hover {
     letter-spacing: inherit;
   }
 }
+.standalone-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: #252017;
+  border: 1px solid #5d4930;
+  color: #edc89c;
+  border-radius: 6px;
+  padding: 14px 17px;
+  margin-bottom: 24px;
+  min-width: 0;
+}
+.standalone-notice > svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.standalone-notice b {
+  display: block;
+  font-size: 12px;
+}
+.standalone-notice p {
+  font-size: 10px;
+  line-height: 1.8;
+  color: #b4a58f;
+  margin-top: 5px;
+}
+.login-form .standalone-notice {
+  margin: 0 0 10px;
+  padding: 13px;
+}
+.login-form .standalone-notice p {
+  font-size: 9px;
+}
+.login-form .standalone-notice b {
+  font-size: 10px;
+}
+.athlete-content .standalone-notice {
+  font-size: 11px;
+}
+.athlete-content .standalone-notice p {
+  font-size: 10px;
+}
+@media (max-width: 700px) {
+  .standalone-notice {
+    padding: 13px;
+    gap: 9px;
+  }
+  .standalone-notice b {
+    font-size: 11px;
+  }
+  .standalone-notice p {
+    font-size: 9px;
+  }
+}

@@ -1,4 +1,5 @@
 "use client";
+import { useStandaloneMode } from "./runtime-provider";
 import { useCallback, useEffect, useState } from "react";
 import {
   ImagePlus,
@@ -11,7 +12,7 @@ import {
 import { Button } from "./ui/button";
 import { dateLabel } from "@/lib/schemas";
 type FileEntry = { id: string; type: string; date: string; name: string };
-export function PrivateFiles({
+function ConnectedPrivateFiles({
   studentId,
   type = "photo",
 }: {
@@ -209,4 +210,25 @@ export function PrivateFiles({
       </form>
     </div>
   );
+}
+
+export function PrivateFiles(props: {
+  studentId: string;
+  type?: "photo" | "document";
+}) {
+  const standalone = useStandaloneMode();
+  if (standalone)
+    return (
+      <div className="privacy-notice">
+        <ShieldCheck size={24} />
+        <div>
+          <h3>Arquivos privados temporariamente pausados</h3>
+          <p>
+            Fotos e anexos não são enviados ou armazenados neste modo. Use
+            apenas dados fictícios na demonstração.
+          </p>
+        </div>
+      </div>
+    );
+  return <ConnectedPrivateFiles {...props} />;
 }

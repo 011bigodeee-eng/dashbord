@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { SignJWT, jwtVerify } from "jose";
 import { db } from "./db";
+import { isStandaloneMode, standaloneUsers } from "./runtime-mode";
 function secret() {
   const s = process.env.AUTH_SECRET;
   if (!s || s.length < 32)
@@ -8,6 +9,14 @@ function secret() {
   return new TextEncoder().encode(s);
 }
 export async function session() {
+  if (isStandaloneMode()) {
+    const role = (await cookies()).get("md-nation-preview-role")?.value;
+    return role === "trainer"
+      ? standaloneUsers.trainer
+      : role === "student"
+        ? standaloneUsers.student
+        : null;
+  }
   const token = (await cookies()).get("pulse-session")?.value;
   if (!token) return null;
   try {

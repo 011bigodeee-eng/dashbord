@@ -17,7 +17,8 @@
     "test:ui": "tsx scripts/ui-check.ts",
     "test:portal": "tsx tests/portal-integration.ts",
     "test:portal:ui": "tsx scripts/portal-ui-check.ts",
-    "deploy:build": "npm run db:migrate && npm run build"
+    "deploy:build": "node scripts/deploy-build.mjs",
+    "test:standalone": "tsx scripts/standalone-ui-check.ts"
   },
   "dependencies": {
     "@fontsource/barlow-condensed": "^5.3.0",

@@ -1,4 +1,5 @@
 "use client";
+import { appFetch } from "@/lib/app-fetch";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -29,6 +30,10 @@ import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { GrowthChart } from "@/components/charts";
 import { brand } from "@/lib/brand";
+import {
+  StandaloneNotice,
+  useStandaloneMode,
+} from "@/components/runtime-provider";
 import { today } from "@/lib/metrics";
 import { dateLabel } from "@/lib/schemas";
 import WorkoutRunner from "./workout-runner";
@@ -81,6 +86,7 @@ function Empty({ title, body }: { title: string; body: string }) {
   );
 }
 export default function Athlete({ page }: { page: string }) {
+  const standalone = useStandaloneMode();
   const router = useRouter();
   const [data, setData] = useState<AthleteData | null>(null);
   const [error, setError] = useState("");
@@ -111,7 +117,7 @@ export default function Athlete({ page }: { page: string }) {
   }, []);
   const load = useCallback(async () => {
     try {
-      const r = await fetch("/api/athlete", { cache: "no-store" });
+      const r = await appFetch("/api/athlete", { cache: "no-store" });
       const d = await r.json();
       if (!r.ok) {
         if (r.status === 403 || r.status === 401)
@@ -147,7 +153,7 @@ export default function Athlete({ page }: { page: string }) {
     return () => clearTimeout(timer);
   }, [notice]);
   async function action(body: object) {
-    const r = await fetch("/api/athlete", {
+    const r = await appFetch("/api/athlete", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
@@ -324,6 +330,7 @@ export default function Athlete({ page }: { page: string }) {
           </div>
         </header>
         <main className="athlete-content">
+          <StandaloneNotice />
           {!online && (
             <div className="athlete-offline" role="status">
               <WifiOff size={17} />
@@ -1196,9 +1203,9 @@ export default function Athlete({ page }: { page: string }) {
                         <Dumbbell size={18} />
                       </div>
                       <p className="coach-note">
-                        Adicione o Athlete à tela inicial pelo menu do
-                        navegador. O acesso aos registros continua exigindo
-                        internet.
+                        {standalone
+                          ? "Adicione o Athlete à tela inicial pelo menu do navegador. Abrir novas telas ainda pode exigir internet; não há suporte offline completo."
+                          : "Adicione o Athlete à tela inicial pelo menu do navegador. O acesso aos registros continua exigindo internet."}
                       </p>
                       {installPrompt && (
                         <Button
@@ -1216,16 +1223,16 @@ export default function Athlete({ page }: { page: string }) {
                     <section className="athlete-panel athlete-privacy">
                       <ShieldCheck size={19} />
                       <p>
-                        Este espaço mostra somente seus treinos, agenda e dados
-                        compartilhados. Não há suporte offline completo;
-                        registros exigem conexão e confirmação do servidor.
+                        {standalone
+                          ? "Modo temporário: somente dados fictícios armazenados neste navegador. Sem contas reais ou sincronização entre dispositivos."
+                          : "Este espaço mostra somente seus treinos, agenda e dados compartilhados. Não há suporte offline completo; registros exigem conexão e confirmação do servidor."}
                       </p>
                     </section>
                     {data.user.demo && (
                       <Button
                         variant="outline"
                         onClick={async () => {
-                          const r = await fetch("/api/auth", {
+                          const r = await appFetch("/api/auth", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({
@@ -1244,7 +1251,7 @@ export default function Athlete({ page }: { page: string }) {
                     <Button
                       variant="outline"
                       onClick={async () => {
-                        await fetch("/api/auth", { method: "DELETE" });
+                        await appFetch("/api/auth", { method: "DELETE" });
                         window.location.assign("/login");
                       }}
                     >

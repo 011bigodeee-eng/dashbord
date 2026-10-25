@@ -1,6 +1,8 @@
 "use client";
+import { appFetch } from "@/lib/app-fetch";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useStandaloneMode } from "@/components/runtime-provider";
 import {
   Check,
   ChevronLeft,
@@ -29,6 +31,7 @@ export default function WorkoutRunner({
   run: Run;
   onUpdate: () => Promise<void>;
 }) {
+  const standalone = useStandaloneMode();
   const [state, setState] = useState<WorkoutState>(run.state);
   const [status, setStatus] = useState(run.status);
   const [updated, setUpdated] = useState(run.updatedAt);
@@ -70,7 +73,7 @@ export default function WorkoutRunner({
     const task = queue.current
       .catch(() => {})
       .then(async () => {
-        const res = await fetch("/api/athlete", {
+        const res = await appFetch("/api/athlete", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -394,15 +397,22 @@ export default function WorkoutRunner({
       </div>
       {error && (
         <p role="alert" className="error athlete-error">
-          {error} Seu último progresso confirmado continua salvo no servidor.
+          {error}{" "}
+          {standalone
+            ? "O último progresso confirmado continua salvo neste navegador."
+            : "Seu último progresso confirmado continua salvo no servidor."}
         </p>
       )}
       <div className="runner-save-status" role="status">
         {saving
-          ? "Salvando no seu histórico…"
+          ? standalone
+            ? "Salvando neste navegador…"
+            : "Salvando no seu histórico…"
           : unsaved
             ? "Existem alterações não salvas."
-            : "Progresso salvo no seu histórico."}
+            : standalone
+              ? "Progresso salvo neste navegador."
+              : "Progresso salvo no seu histórico."}
         {unsaved && (
           <Button
             variant="outline"

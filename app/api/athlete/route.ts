@@ -1,3 +1,5 @@
+import { isStandaloneMode } from "@/lib/runtime-mode";
+import { servicePaused } from "@/lib/service-paused";
 import { NextResponse } from "next/server";
 import {
   athleteContext,
@@ -14,6 +16,7 @@ import { db } from "@/lib/db";
 import { today } from "@/lib/metrics";
 import { workoutClock } from "@/lib/workout-clock";
 export async function GET() {
+  if (isStandaloneMode()) return servicePaused();
   try {
     return NextResponse.json(await athleteData(), {
       headers: { "Cache-Control": "private, no-store" },
@@ -23,6 +26,7 @@ export async function GET() {
   }
 }
 export async function POST(req: Request) {
+  if (isStandaloneMode()) return servicePaused();
   if (!checkOrigin(req))
     return NextResponse.json({ error: "Origem inválida" }, { status: 403 });
   try {

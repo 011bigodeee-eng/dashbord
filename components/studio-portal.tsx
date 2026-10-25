@@ -1,4 +1,5 @@
 "use client";
+import { appFetch } from "@/lib/app-fetch";
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import {
@@ -20,6 +21,7 @@ import {
   X,
 } from "lucide-react";
 import { Button } from "./ui/button";
+import { useStandaloneMode } from "./runtime-provider";
 import { Dialog } from "./ui/dialog";
 import { Entry, dateLabel } from "@/lib/schemas";
 import type { Run } from "./athlete/types";
@@ -80,6 +82,7 @@ export default function StudioPortal({
   overview?: boolean;
   onTraining?: (entry?: Entry, studentId?: string) => void;
 }) {
+  const standalone = useStandaloneMode();
   const [data, setData] = useState<StudioData | null>(null);
   const [error, setError] = useState("");
   const [tab, setTab] = useState("Acessos");
@@ -94,7 +97,7 @@ export default function StudioPortal({
   const [toast, setToast] = useState("");
   const load = useCallback(async () => {
     try {
-      const r = await fetch("/api/studio", { cache: "no-store" });
+      const r = await appFetch("/api/studio", { cache: "no-store" });
       const d = await r.json();
       if (!r.ok) throw new Error(d.error);
       setData(d);
@@ -116,7 +119,7 @@ export default function StudioPortal({
     return () => clearTimeout(t);
   }, [toast]);
   async function action(body: object) {
-    const r = await fetch("/api/studio", {
+    const r = await appFetch("/api/studio", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
@@ -361,7 +364,14 @@ export default function StudioPortal({
                               <Button
                                 variant="outline"
                                 size="sm"
-                                disabled={s.data.status !== "Ativo"}
+                                disabled={
+                                  standalone || s.data.status !== "Ativo"
+                                }
+                                title={
+                                  standalone
+                                    ? "Convites reais estão pausados neste modo"
+                                    : undefined
+                                }
                                 onClick={() => {
                                   setInvitation(null);
                                   setInviting(s);

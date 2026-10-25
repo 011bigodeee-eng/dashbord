@@ -1,3 +1,5 @@
+import { isStandaloneMode } from "@/lib/runtime-mode";
+import { servicePaused } from "@/lib/service-paused";
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { session, trainerSession, checkOrigin } from "@/lib/auth";
@@ -5,6 +7,7 @@ export async function GET(
   _: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  if (isStandaloneMode()) return servicePaused();
   const user = await session();
   if (!user) return new Response(null, { status: 401 });
   const { id } = await params;
@@ -43,6 +46,7 @@ export async function DELETE(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  if (isStandaloneMode()) return servicePaused();
   if (!checkOrigin(req)) return new Response(null, { status: 403 });
   const user = await trainerSession();
   if (!user) return new Response(null, { status: 401 });

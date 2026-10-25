@@ -1,4 +1,5 @@
 "use client";
+import { appFetch } from "@/lib/app-fetch";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, ShieldCheck, Loader2 } from "lucide-react";
@@ -13,7 +14,7 @@ export default function Invitation({ token }: { token: string }) {
   const [confirm, setConfirm] = useState("");
   const [busy, setBusy] = useState(false);
   useEffect(() => {
-    fetch(`/api/invitations/${token}`)
+    appFetch(`/api/invitations/${token}`)
       .then(async (r) => {
         const d = await r.json();
         if (!r.ok) throw new Error(d.error);
@@ -52,7 +53,7 @@ export default function Invitation({ token }: { token: string }) {
               }
               setBusy(true);
               try {
-                const r = await fetch(`/api/invitations/${token}`, {
+                const r = await appFetch(`/api/invitations/${token}`, {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({ password }),

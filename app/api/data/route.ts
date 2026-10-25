@@ -1,8 +1,11 @@
+import { isStandaloneMode } from "@/lib/runtime-mode";
+import { servicePaused } from "@/lib/service-paused";
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { checkOrigin, trainerSession } from "@/lib/auth";
 import { schemas, Kind } from "@/lib/schemas";
 export async function GET() {
+  if (isStandaloneMode()) return servicePaused();
   const user = await trainerSession();
   if (!user)
     return NextResponse.json(
@@ -19,6 +22,7 @@ export async function GET() {
   );
 }
 export async function POST(req: Request) {
+  if (isStandaloneMode()) return servicePaused();
   if (!checkOrigin(req))
     return NextResponse.json({ error: "Origem inválida" }, { status: 403 });
   const user = await trainerSession();

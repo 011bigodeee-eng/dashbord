@@ -1,19 +1,61 @@
 # MD Nation — Personal Performance OS
 
+## Modo temporário sem Supabase — ativo por padrão
+
+O site agora abre **sem banco de dados, sem senha, sem `DATABASE_URL` e sem `AUTH_SECRET`**. No login, escolha **Visualizar como personal** ou **Visualizar como aluno**. Essa seleção abre somente uma demonstração pública, não uma conta real.
+
+- Os dois ambientes usam dados **fictícios**, gerados no navegador.
+- Cadastros, treinos, pagamentos, avaliações, mensagens e solicitações da demonstração são salvos em `localStorage` e sobrevivem a recarregamentos nesse navegador.
+- Studio e Athlete compartilham esses dados ao trocar de ambiente **no mesmo navegador**. Não há sincronização entre dispositivos, contas reais, garantia de retenção ou armazenamento seguro para informações pessoais.
+- Convites reais por e-mail, login de contas reais, fotos e anexos privados ficam pausados. Nenhum dado do banco é consultado, copiado, alterado ou excluído.
+- Limpar os dados do site, trocar de navegador ou usar navegação anônima separa/perde o histórico fictício local. Em Configurações, **Restaurar demonstração local** reinicia apenas a demonstração deste navegador, mediante confirmação.
+
+Para executar:
+
+```bash
+npm ci
+npm run dev
+```
+
+Na Vercel, basta publicar a `main`. Nenhuma variável é necessária neste modo. O deploy pula migrações e testa a compilação sem se conectar ao Supabase, mesmo se uma `DATABASE_URL` antiga estiver configurada. **Não defina `APP_MODE=database` enquanto desejar permanecer sem banco.** `DEMO_MODE=false` de uma configuração anterior não bloqueia esta demonstração temporária.
+
+`APP_MODE=standalone` torna a escolha explícita; a ausência de `APP_MODE` também ativa esse modo. O modo de banco só é reativado com o valor exato `APP_MODE=database` no servidor e um novo deploy.
+
+```bash
+npm run test:standalone   # Navegação, CRUD local, treino, feedback e reagendamento sem banco
+npm test
+npm run deploy:build     # Pula migrações no modo padrão
+```
+
+Os testes de integração PostgreSQL descritos adiante só se aplicam com `APP_MODE=database` e um banco de desenvolvimento. Não são necessários para publicar a demonstração temporária. O service worker continua sem cache de respostas privadas e não há promessa de navegação offline completa.
+
+### Reativar a integração quando o serviço voltar
+
+1. Configure `APP_MODE=database`, `DATABASE_URL` e `AUTH_SECRET` para o banco correto.
+2. Defina conscientemente `DEMO_MODE`/`NEXT_PUBLIC_DEMO_MODE` conforme o ambiente.
+3. Faça backup do banco e um novo deploy. O build então aplica as migrações antes de compilar.
+4. Contas reais voltam a usar autenticação e autorização no servidor. A seleção de perfil do modo temporário nunca é aceita como autenticação no modo de banco.
+
+Os dados fictícios de `localStorage` **não são importados automaticamente** para o banco. A integração foi preservada, sem depender de o Supabase estar disponível agora.
+
+## Fluxo conectado opcional
+
+As instruções abaixo descrevem o modo `APP_MODE=database` e permanecem disponíveis para quando o serviço voltar.
+
 Sua operação. Seus alunos. Sua evolução.
 
 Aplicativo de gestão para personal trainers, com interface escura, gráficos interativos e operações persistidas em PostgreSQL. A demonstração usa somente dados fictícios e está identificada em todas as telas.
 
 ## Executar localmente
 
-Requisitos: Node.js 22.12+ (validado com Node 24), npm e Docker para o PostgreSQL local. Para banco gerenciado, configure `DATABASE_URL` e dispense o Docker.
+Requisitos gerais: Node.js 22.12+ (validado com Node 24) e npm. Docker e PostgreSQL são opcionais e só são necessários para o modo conectado; para banco gerenciado, configure `DATABASE_URL` e dispense o Docker.
 
 ```bash
 bash scripts/setup-local.sh
 npm run dev
 ```
 
-Abra a porta 3000 e escolha **Visualizar como personal** ou **Visualizar como aluno**. O script preserva um `.env` existente, gera um segredo de sessão aleatório para novas instalações, instala o lockfile, prepara o banco e executa o seed somente quando `DEMO_MODE=true`. O seed é idempotente: não apaga alterações da demonstração.
+Abra a porta 3000 e escolha **Visualizar como personal** ou **Visualizar como aluno**. O script preserva um `.env` existente e cria `APP_MODE=standalone` em novas instalações. Instala o lockfile e gera o cliente tipado sem conectar ao banco. Somente com `APP_MODE=database` prepara o PostgreSQL e executa o seed quando `DEMO_MODE=true`. O seed é idempotente: não apaga alterações da demonstração.
 
 Alternativa manual:
 
@@ -127,7 +169,7 @@ Execute `npm run db:migrate` em um terminal seguro conectado ao banco de destino
 e crie seu profissional com `npm run user:create`, conforme as instruções acima.
 Para publicar uma demonstração, use um banco separado, habilite as duas variáveis
 de demonstração e execute o seed contra esse banco. Alterações de variáveis exigem
-um novo deploy. O build da Vercel aplica as migrações SQL antes de compilar; o seed não é executado automaticamente.
+um novo deploy. Somente com `APP_MODE=database`, o build da Vercel aplica as migrações SQL antes de compilar; no modo temporário, elas são puladas. O seed não é executado automaticamente.
 
 Um 404 padrão da plataforma, sem invocações de função, indica que se deve conferir
 o framework, a raiz e a saída do deploy. Falhas de conexão com banco ou de login
@@ -135,7 +177,7 @@ devem ser investigadas nos logs das funções depois que o Next.js estiver servi
 
 ## Ambiente de nuvem e persistência
 
-A tarefa já usa checkout isolado em `/workspace/dashbord`; não é necessário criar worktree. Dependências e arquivos são retidos, processos precisam ser reiniciados. `scripts/local-db.sh` inicia o container e aguarda prontidão. `scripts/snapshot-db.sh` salva um dump ignorado pelo Git em `.local/cloud-snapshot.sql`; se um novo daemon Docker não contiver o banco, o script local pode restaurar esse snapshot. Gere novo dump antes de publicar uma nova configuração de ambiente. O snapshot não substitui backups regulares ou um PostgreSQL gerenciado em produção. Restauração em nova tarefa ainda precisa ser verificada após publicação pela plataforma.
+A tarefa já usa checkout isolado em `/workspace/dashbord`; não é necessário criar worktree. Dependências e arquivos são retidos, processos precisam ser reiniciados. `scripts/local-db.sh` inicia o container e aguarda prontidão. Em `APP_MODE=database`, `scripts/snapshot-db.sh` salva um dump ignorado pelo Git em `.local/cloud-snapshot.sql`; se um novo daemon Docker não contiver o banco, o script local pode restaurar esse snapshot. Gere novo dump antes de publicar uma nova configuração de ambiente. O snapshot não substitui backups regulares ou um PostgreSQL gerenciado em produção. Restauração em nova tarefa ainda precisa ser verificada após publicação pela plataforma.
 
 ## Próximas etapas de produto
 
@@ -155,7 +197,7 @@ npx prisma generate
 npm run db:migrate
 ```
 
-A migração `202610250003_athlete` adiciona papéis e tabelas do portal sem apagar os registros existentes. Contas antigas recebem `TRAINER`. Execute com a `DATABASE_URL` do banco correto em um terminal seguro. O `vercel.json` agora usa `npm run deploy:build`: primeiro aplica as migrações, depois compila o Next.js. A nova versão só deve ser promovida quando ambos terminarem com sucesso. Configure `DATABASE_URL` para o banco de destino e use bancos separados para Production e Preview. Sem conexão válida, o build falha em vez de publicar uma aplicação incompatível com o schema antigo. O banco deste ambiente não é o banco Supabase de produção. O comando `npm run build` isolado continua sem aplicar migrações.
+A migração `202610250003_athlete` adiciona papéis e tabelas do portal sem apagar os registros existentes. Contas antigas recebem `TRAINER`. Execute com a `DATABASE_URL` do banco correto em um terminal seguro. O `vercel.json` usa `npm run deploy:build`: em `APP_MODE=database`, primeiro aplica as migrações e depois compila o Next.js; no modo temporário padrão, apenas compila. A nova versão só deve ser promovida quando ambos terminarem com sucesso. Configure `DATABASE_URL` para o banco de destino e use bancos separados para Production e Preview. Sem conexão válida, o build falha em vez de publicar uma aplicação incompatível com o schema antigo. O banco deste ambiente não é o banco Supabase de produção. O comando `npm run build` isolado continua sem aplicar migrações.
 
 Para o modo demonstrativo, rode `npm run db:seed` com `DEMO_MODE=true`. O seed prepara um profissional e o aluno fictício Rafael Martins, preservando os dados existentes. A página de login oferece **Visualizar como personal** e **Visualizar como aluno**; há também troca autorizada entre os ambientes de demonstração. Esses atalhos só funcionam com `DEMO_MODE=true` no servidor, e contas demonstrativas são bloqueadas com o modo desabilitado. Não cadastre dados reais nas contas compartilhadas.
 
