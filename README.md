@@ -2,7 +2,7 @@
 
 ## Modo temporário sem Supabase — ativo por padrão
 
-O site agora abre **sem banco de dados, sem senha, sem `DATABASE_URL` e sem `AUTH_SECRET`**. No login, escolha **Visualizar como personal** ou **Visualizar como aluno**. Essa seleção abre somente uma demonstração pública, não uma conta real.
+O site agora abre **sem banco de dados, sem senha, sem `DATABASE_URL` e sem `AUTH_SECRET`**. A página inicial abre diretamente no **Studio**, sem tela de login. `/login` também redireciona para o painel. Use **Visualizar como aluno** no menu para explorar o Athlete. Essa seleção abre somente uma demonstração pública, não uma conta real.
 
 - Os dois ambientes usam dados **fictícios**, gerados no navegador.
 - Cadastros, treinos, pagamentos, avaliações, mensagens e solicitações da demonstração são salvos em `localStorage` e sobrevivem a recarregamentos nesse navegador.
@@ -17,21 +17,21 @@ npm ci
 npm run dev
 ```
 
-Na Vercel, basta publicar a `main`. Nenhuma variável é necessária neste modo. O deploy pula migrações e testa a compilação sem se conectar ao Supabase, mesmo se uma `DATABASE_URL` antiga estiver configurada. **Não defina `APP_MODE=database` enquanto desejar permanecer sem banco.** `DEMO_MODE=false` de uma configuração anterior não bloqueia esta demonstração temporária.
+Na Vercel, basta publicar a `main`. Nenhuma variável é necessária neste modo. O deploy pula migrações e testa a compilação sem se conectar ao Supabase, mesmo se uma `DATABASE_URL` antiga estiver configurada. `npm run db:generate` usa uma URL fictícia apenas no subprocesso de geração de tipos: não conecta ao banco nem altera variáveis reais. A integração está temporariamente bloqueada por `databaseIntegrationEnabled=false` em `runtime.config.mjs`, inclusive se uma variável antiga `APP_MODE=database` existir na Vercel. `DEMO_MODE=false` de uma configuração anterior não bloqueia esta demonstração temporária.
 
-`APP_MODE=standalone` torna a escolha explícita; a ausência de `APP_MODE` também ativa esse modo. O modo de banco só é reativado com o valor exato `APP_MODE=database` no servidor e um novo deploy.
+`APP_MODE=standalone` torna a escolha explícita; a ausência de `APP_MODE` também ativa esse modo. Para reativar o banco, é necessário habilitar `databaseIntegrationEnabled` em `runtime.config.mjs`, definir `APP_MODE=database` no servidor e publicar um novo deploy.
 
 ```bash
 npm run test:standalone   # Navegação, CRUD local, treino, feedback e reagendamento sem banco
 npm test
-npm run deploy:build     # Pula migrações no modo padrão
+npm run deploy:build     # Pula migrações enquanto a integração estiver bloqueada
 ```
 
 Os testes de integração PostgreSQL descritos adiante só se aplicam com `APP_MODE=database` e um banco de desenvolvimento. Não são necessários para publicar a demonstração temporária. O service worker continua sem cache de respostas privadas e não há promessa de navegação offline completa.
 
 ### Reativar a integração quando o serviço voltar
 
-1. Configure `APP_MODE=database`, `DATABASE_URL` e `AUTH_SECRET` para o banco correto.
+1. Habilite `databaseIntegrationEnabled` em `runtime.config.mjs` e configure `APP_MODE=database`, `DATABASE_URL` e `AUTH_SECRET` para o banco correto.
 2. Defina conscientemente `DEMO_MODE`/`NEXT_PUBLIC_DEMO_MODE` conforme o ambiente.
 3. Faça backup do banco e um novo deploy. O build então aplica as migrações antes de compilar.
 4. Contas reais voltam a usar autenticação e autorização no servidor. A seleção de perfil do modo temporário nunca é aceita como autenticação no modo de banco.

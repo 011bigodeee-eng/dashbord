@@ -1252,11 +1252,11 @@ export default function Athlete({ page }: { page: string }) {
                       variant="outline"
                       onClick={async () => {
                         await appFetch("/api/auth", { method: "DELETE" });
-                        window.location.assign("/login");
+                        window.location.assign(standalone ? "/" : "/login");
                       }}
                     >
                       <LogOut size={16} />
-                      Sair da conta
+                      {standalone ? "Voltar ao Studio" : "Sair da conta"}
                     </Button>
                   </>
                 )}

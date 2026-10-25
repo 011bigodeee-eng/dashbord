@@ -20,20 +20,16 @@ try {
       connectedRequests.push(new URL(r.url()).pathname);
   });
   await page.goto(base + "/login");
-  await page
-    .getByRole("button", { name: "Visualizar como personal", exact: true })
-    .waitFor();
+  await page.waitForURL(base + "/");
   assert.equal(await page.getByLabel("E-mail", { exact: true }).count(), 0);
   assert.equal(await page.getByLabel("Senha", { exact: true }).count(), 0);
-  await page
-    .getByRole("button", { name: "Visualizar como personal", exact: true })
-    .click();
-  await page.waitForURL(base + "/");
   await page.getByRole("heading", { name: "Evolução do negócio" }).waitFor();
   await page
     .getByText("Modo temporário · sem Supabase", { exact: true })
     .waitFor();
-  console.log("PASS entry without credentials and functional local dashboard");
+  console.log(
+    "PASS direct entry, login redirect, no credential form and functional local dashboard",
+  );
   await page.goto(base + "/alunos");
   await page
     .getByRole("button", { name: "Novo registro", exact: true })

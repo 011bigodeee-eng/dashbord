@@ -11,7 +11,8 @@ const page = await browser.newPage({
 });
 page.on("pageerror", (e) => console.log("PAGE ERROR", e.message));
 await page.goto("http://localhost:3000/login");
-await page.getByRole("button", { name: "Visualizar como personal" }).click();
+if (new URL(page.url()).pathname === "/login")
+  await page.getByRole("button", { name: "Visualizar como personal" }).click();
 await page.waitForURL("http://localhost:3000/");
 await page.getByRole("heading", { name: "Evolução do negócio" }).waitFor();
 await page.waitForTimeout(1500);

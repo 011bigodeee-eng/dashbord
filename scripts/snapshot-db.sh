@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd "$(dirname "$0")/.."
-if ! node --input-type=module -e 'import "dotenv/config"; process.exit(process.env.APP_MODE === "database" ? 0 : 1)'; then
+if ! node --input-type=module -e 'import "dotenv/config"; import {databaseIntegrationEnabled} from "./runtime.config.mjs"; process.exit(databaseIntegrationEnabled && process.env.APP_MODE === "database" ? 0 : 1)'; then
   echo 'Modo temporário: nenhum snapshot do banco foi criado ou alterado.'
   exit 0
 fi

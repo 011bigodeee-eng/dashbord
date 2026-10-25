@@ -381,7 +381,7 @@ export default function Workspace({
   };
   const logout = async () => {
     await appFetch("/api/auth", { method: "DELETE" });
-    window.location.assign("/login");
+    window.location.assign(standalone ? "/" : "/login");
   };
   const studentList = m.students
     .filter(
@@ -709,9 +709,15 @@ export default function Workspace({
               <b>{of("profile")[0]?.data.name || user?.name}</b>
               <small>Personal trainer</small>
             </div>
-            <button className="icon-button" aria-label="Sair" onClick={logout}>
-              <LogOut size={16} />
-            </button>
+            {!standalone && (
+              <button
+                className="icon-button"
+                aria-label="Sair"
+                onClick={logout}
+              >
+                <LogOut size={16} />
+              </button>
+            )}
           </div>
           <button
             className="collapse-button"

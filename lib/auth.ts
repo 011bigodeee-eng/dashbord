@@ -11,11 +11,9 @@ function secret() {
 export async function session() {
   if (isStandaloneMode()) {
     const role = (await cookies()).get("md-nation-preview-role")?.value;
-    return role === "trainer"
-      ? standaloneUsers.trainer
-      : role === "student"
-        ? standaloneUsers.student
-        : null;
+    return role === "student"
+      ? standaloneUsers.student
+      : standaloneUsers.trainer;
   }
   const token = (await cookies()).get("pulse-session")?.value;
   if (!token) return null;

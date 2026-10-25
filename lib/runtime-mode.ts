@@ -1,6 +1,7 @@
+import { databaseIntegrationEnabled } from "../runtime.config.mjs";
 /** Temporary default: no database, credentials or external service is required. */
 export function isStandaloneMode() {
-  return process.env.APP_MODE !== "database";
+  return !databaseIntegrationEnabled || process.env.APP_MODE !== "database";
 }
 export const standaloneUsers = {
   trainer: {
