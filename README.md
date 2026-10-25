@@ -102,6 +102,36 @@ npm run build
 npm start
 ```
 
+## Deploy na Vercel
+
+O arquivo `vercel.json` define explicitamente o framework Next.js, a instalação,
+o build e a saída `.next`. Isso evita um deploy estático com erro 404 quando o
+projeto Vercel foi importado antes de existir código no repositório.
+
+Em **Settings → Build and Deployment**, mantenha **Root Directory** vazio
+(raiz do repositório). Não use `dashbord`: esse é o nome do checkout local,
+e o `package.json` já está na raiz do Git. O preset é **Next.js**; não use
+**Other**, saída `public` ou `out`, nem `scripts/setup-local.sh` como build.
+Depois de atualizar essas configurações, faça um novo deploy da `main`.
+
+A Vercel não executa o container Docker deste ambiente. Para usar os cadastros
+e o login, configure um PostgreSQL gerenciado e, em **Settings → Environment
+Variables**, defina `DATABASE_URL` e um `AUTH_SECRET` aleatório de pelo menos
+32 caracteres. Não use a conexão `localhost` do exemplo nem coloque segredos
+no Git. Para produção privada, defina `DEMO_MODE=false` e
+`NEXT_PUBLIC_DEMO_MODE=false`.
+
+Execute `npm run db:migrate` em um terminal seguro conectado ao banco de destino
+e crie seu profissional com `npm run user:create`, conforme as instruções acima.
+Para publicar uma demonstração, use um banco separado, habilite as duas variáveis
+de demonstração e execute o seed contra esse banco. Alterações de variáveis exigem
+um novo deploy. As migrações e o seed não são executados automaticamente pelo
+build da Vercel.
+
+Um 404 padrão da plataforma, sem invocações de função, indica que se deve conferir
+o framework, a raiz e a saída do deploy. Falhas de conexão com banco ou de login
+devem ser investigadas nos logs das funções depois que o Next.js estiver servido.
+
 ## Ambiente de nuvem e persistência
 
 A tarefa já usa checkout isolado em `/workspace/dashbord`; não é necessário criar worktree. Dependências e arquivos são retidos, processos precisam ser reiniciados. `scripts/local-db.sh` inicia o container e aguarda prontidão. `scripts/snapshot-db.sh` salva um dump ignorado pelo Git em `.local/cloud-snapshot.sql`; se um novo daemon Docker não contiver o banco, o script local pode restaurar esse snapshot. Gere novo dump antes de publicar uma nova configuração de ambiente. O snapshot não substitui backups regulares ou um PostgreSQL gerenciado em produção. Restauração em nova tarefa ainda precisa ser verificada após publicação pela plataforma.
